@@ -79,6 +79,11 @@ ggplot(data = fog, aes(x = Minutes, y = MPa_perA)) +
   theme_classic()+
   facet_wrap(~tree)
 
+ggplot(data = fog, aes(x = Minutes, y = MPa_dif)) +
+  geom_jitter(aes(color = height,shape = tree ), alpha = .7 )+
+  theme_light()+
+  scale_color_viridis()+
+  facet_wrap(~Type)
 
 #boxplot
 
