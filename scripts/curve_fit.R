@@ -25,7 +25,7 @@ my.eq#display equation in console
 
 
 #now to add to plot:
-+annotate(geom = "text", x = 0.2, y = 15000, label = label.text, #example version giving x and y coordinates for lable placement
++annotate(geom = "text", x = 100, y = 10, label = my.eq, #example version giving x and y coordinates for lable placement
           family = "serif", hjust = 0, parse = TRUE, size = 4)
 
 +annotate(geom = "text", label = label.text, 

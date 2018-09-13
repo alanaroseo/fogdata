@@ -66,9 +66,12 @@ ggplot(data = fog, aes(x = Minutes, y = rel_w_dif)) +
 p <- ggplot(data = fog, aes(x = Minutes, y = rel_w_dif)) +
   geom_point(aes(color=height, shape = tree), alpha = .7)+
   scale_color_viridis()+
-  stat_smooth(method="lm", se=TRUE, fill=NA,formula=y ~ poly(x, 3, raw=TRUE),colour="blue")+
+  stat_smooth(method="lm", se=TRUE, fill=NA,formula=y ~ poly(x, 3, raw=TRUE),colour="pink")+
   theme_classic()+
   facet_wrap(~Type)
+
+p+annotate(geom = "text", x = 100, y = 10, label = my.eq, #my.eq is the name of the equation, p is name of plot
+            family = "serif", hjust = 0, parse = TRUE, size = 4)
          
 
 ggplot(data = fog, aes(x = Minutes, y = MPa_dif)) +
