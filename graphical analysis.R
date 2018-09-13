@@ -1,3 +1,6 @@
+
+fog <- as.data.frame(read.delim("clipboard"))
+
 #fog by height graphical analysis
 
 library(tidyverse)
@@ -49,8 +52,24 @@ ggplot(data = fog, aes(x = Minutes, y = weight_perA )) +
 ggplot(data = fog, aes(x = Minutes, y = MPa_dif)) +
   geom_point(aes(color=height, shape = Type), alpha = .7)+
   scale_color_viridis()+
+  geom_smooth(method=lm, se=FALSE, color = "orchid")+
   theme_classic()+
   facet_wrap(~tree)
+
+ggplot(data = fog, aes(x = Minutes, y = rel_w_dif)) +
+  geom_point(aes(color=height, shape = tree), alpha = .7)+
+  scale_color_viridis()+
+  geom_smooth(method=lm, se=TRUE, color = "orchid")+
+  theme_classic()+
+  facet_wrap(~Type)
+
+p <- ggplot(data = fog, aes(x = Minutes, y = rel_w_dif)) +
+  geom_point(aes(color=height, shape = tree), alpha = .7)+
+  scale_color_viridis()+
+  stat_smooth(method="lm", se=TRUE, fill=NA,formula=y ~ poly(x, 3, raw=TRUE),colour="blue")+
+  theme_classic()+
+  facet_wrap(~Type)
+         
 
 ggplot(data = fog, aes(x = Minutes, y = MPa_dif)) +
   geom_point(aes(color=height), alpha = .7)+
