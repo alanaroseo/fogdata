@@ -1,0 +1,49 @@
+#filtering the data into subsets
+
+library(tidyverse)
+library(dplyr)
+# separating L and G
+L_all <- filter(fog, Type == "L" )
+G_all <- filter(fog, Type == "G" )
+#Filtering by tree
+T6_L <- filter(L_all, tree == "T6" )
+T8_L <- filter(L_all, tree == "T8" )
+T11_L <- filter(L_all, tree == "T11" )
+T16_L <- filter(L_all, tree == "T16" )
+
+T6_G <- filter(G_all, tree == "T6" )
+T8_G <- filter(G_all, tree == "T8" )
+T11_G <- filter(G_all, tree == "T11" )
+T16_G <- filter(G_all, tree == "T16" )
+
+#filter by sample
+
+T6_L_20 <- filter(T6_L, height == "20" )
+T6_L_45 <- filter(T6_L, height == "45" )
+T6_L_91 <- filter(T6_L, height == "91" )
+
+T6_G_20 <- filter(T6_G, height == "20" )
+T6_G_45 <- filter(T6_G, height == "45" )
+T6_G_91 <- filter(T6_G, height == "91" )
+#
+T8_L_50 <- filter(T8_L, height == "50.5" )
+T8_L_66 <- filter(T8_L, height == "66.1" )
+T8_L_97 <- filter(T8_L, height == "97" )
+
+T8_G_50 <- filter(T8_G, height == "50.5" )
+T8_G_66 <- filter(T8_G, height == "66.1" )
+T8_G_97 <- filter(T8_G, height == "97" )
+#
+T11_L_30 <- filter(T11_L, height == "30" )
+T11_L_50 <- filter(T11_L, height == "50.5" )
+T11_L_90 <- filter(T11_L, height == "90" )
+
+T11_G_30 <- filter(T11_G, height == "30" )
+T11_G_50 <- filter(T11_G, height == "50.5" )
+T11_G_90 <- filter(T11_G, height == "90" )
+#
+T16_L_37 <- filter(T16_L, height == "37.1" )
+T16_L_51 <- filter(T16_L, height == "51" )
+
+T16_G_37 <- filter(T16_G, height == "37.1" )
+T16_G_51 <- filter(T16_G, height == "51" )

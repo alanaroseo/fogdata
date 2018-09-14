@@ -31,6 +31,13 @@ ggplot(data = fog, aes(x = Minutes, y = weight_perA )) +
   facet_wrap(~Type)
 
 ggplot(data = fog, aes(x = Minutes, y = weight_perA )) +
+  geom_point(aes(color=height, shape = Type), alpha = .7)+
+  scale_color_viridis()+
+  geom_smooth(method=lm, se=FALSE, color = "orchid")+
+  theme_classic()+
+  facet_wrap(~tree)
+
+ggplot(data = fog, aes(x = Minutes, y = weight_perA )) +
   geom_point(aes(color=height, shape = tree, size = MPa_dif), alpha = .7)+
   scale_color_viridis()+
   theme_classic()+
