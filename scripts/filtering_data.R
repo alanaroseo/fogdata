@@ -10,11 +10,15 @@ T6_L <- filter(L_all, tree == "T6" )
 T8_L <- filter(L_all, tree == "T8" )
 T11_L <- filter(L_all, tree == "T11" )
 T16_L <- filter(L_all, tree == "T16" )
+T34_L <- filter(L_all, tree == "T34" )
+T48_L <- filter(L_all, tree == "T48" )
+
 
 T6_G <- filter(G_all, tree == "T6" )
 T8_G <- filter(G_all, tree == "T8" )
 T11_G <- filter(G_all, tree == "T11" )
 T16_G <- filter(G_all, tree == "T16" )
+T34_G <- filter(G_all, tree == "T34" )
 
 #filter by sample
 
@@ -47,3 +51,17 @@ T16_L_51 <- filter(T16_L, height == "51" )
 
 T16_G_37 <- filter(T16_G, height == "37.1" )
 T16_G_51 <- filter(T16_G, height == "51" )
+
+#
+T34_L_22 <- filter(T34_L, height == "22.4" )
+T34_L_56 <- filter(T34_L, height == "56.6" )
+T34_L_80 <- filter(T34_L, height == "80.2" )
+T34_L_102 <- filter(T34_L, height == "102.3" )
+
+T34_G_22 <- filter(T34_G, height == "22.4" )
+T34_G_56 <- filter(T34_G, height == "56.6" )
+T34_G_80 <- filter(T34_G, height == "80.2" )
+T34_G_102 <- filter(T34_G, height == "102.3" )
+
+#
+T48_L_60 <- filter(T48_L, height == "60.9" )
