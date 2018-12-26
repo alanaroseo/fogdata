@@ -116,5 +116,11 @@ ggplot(data = fog, aes(x = Minutes, y = MPa_dif)) +
 
 #boxplot
 
-ggplot(data = surveys_complete, aes(x = species_id, y = weight)) +
-  geom_boxplot()
+ggplot(data = fog, aes(group=Type, y = weight_perA)) +
+  geom_boxplot()+
+  facet_wrap(~tree)
+
+ggplot(data = fog, aes(group=tree, y = weight_perA)) +
+  geom_boxplot()+
+  facet_wrap(~Type)
+

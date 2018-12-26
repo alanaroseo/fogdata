@@ -20,40 +20,51 @@ library(investr)
 fog <- as.data.frame(read.delim("clipboard"))
 
 
-# Set up plot export parameters
-pdf('UptakePlots.pdf', width = 6.5, height = 8.5)
-
 ##########################################
 # Analyze water potential (psi) vs. time #
 ##########################################
-# Fit logistic model(s) to sese surface data
+# Fit 4 parameter logistic model(s) to sese surface data
 
 
 ########
 #T11
-
+names(fog)
 #T1130L
-m_fpl_T11_L_30 = nls(MPa_final ~ SSfpl(Minutes, A, B, xmid, scal), data = T11_L_30, start = list(A = max(T11_L_30$MPa_final), B = 0, xmid = 100, scal = 40), lower = c(0, 0, 0, 0), upper = c(1000, 1000, 1e5, 10000), algorithm = "port")
+m_fpl_T11_L_30 = nls(MPa_f ~ SSfpl(Minutes, A, B, xmid, scal), data = T11_L_30,  algorithm = "port")
 
 # Summarize model output
 summary(m_fpl_T11_L_30)
+
+# Fit 3 parameter logistic model(s) to SESE surface data
+m_tpl_T11_L_30 = nls(MPa_f ~ SSlogis(Minutes, A, xmid, scal), data = T11_L_30,  algorithm = 'port')
+
+# Summarize model output
+summary(m_tpl_T11_L_30)
+anova(m_tpl_T11_L_30,m_fpl_T11_L_30)
+
+ggplot(T11_L_30, aes(Minutes,MPa_f)) + 
+  geom_point() 
+        
+
 
 # Define plotting parameters
 par(mfrow=c(3,2), oma = c(3,3,3,1), mar = c(2,3,1,2))
 
 # Plot output
-plotFit(m_fpl_T11_L_30, interval = 'confidence', data = d_Pr_surf, xlim = c(0,450), ylim = c(0,2.5), shade = TRUE, main = titles[i], cex = 1.25, cex.axis = 1.5, cex.main = 1.4, xaxt = 'n', yaxt = 'n', col.conf = 'grey90')
-#abline(v = coef(summary(m_fpl_T11_L_30))[3,1], lty = 2)
+plotFit(m_fpl_T11_L_30, interval = 'confidence', data = T11_L_30, xlim = c(0,450), ylim = c(0,2.5), shade = TRUE,  cex = 1.25, cex.axis = 1.5, cex.main = 1.4, xaxt = 'n', yaxt = 'n', col.conf = 'grey90')
+abline(v = coef(summary(m_fpl_T11_L_30))[3,1], lty = 2)
 axis(1, at = c(0,150,300,450), cex.axis = 1.5, labels = FALSE)
 axis(2, at = c(0, 1.25, 2.5), cex.axis = 1.5, labels = TRUE)
 mtext(expression(paste('-',Psi, ' [MPa]')), side = 2, cex = 1.1, line = 3)
 mtext(expression('T11 30 L'), side = 3, cex = 1.1, line = 1)
 
 #T1150L
-m_fpl_T11_L_50 = nls(MPa_final ~ SSfpl(Minutes, A, B, xmid, scal), data = T11_L_50, start = list(A = max(T11_L_50$MPa_final), B = 0, xmid = 100, scal = 40), lower = c(0, 0, 0, 0), upper = c(1000, 1000, 1e5, 10000), algorithm = "port")
+m_fpl_T11_L_50 = nls(MPa_f ~ SSfpl(Minutes, A, B, xmid, scal), data = T11_L_50, start = list(A = max(T11_L_50$MPa_f), B = 0, xmid = 100, scal = 40), lower = c(0, 0, 0, 0), upper = c(1000, 1000, 1e5, 10000), algorithm = "port")
 
 # Summarize model output
 summary(m_fpl_T11_L_50)
+
+
 
 # Define plotting parameters
 par(mfrow=c(3,2), oma = c(3,3,3,1), mar = c(2,3,1,2))
@@ -71,11 +82,12 @@ mtext(expression('T11 50 L'), side = 3, cex = 1.1, line = 1)
 # Analyze change in g water vs. time #
 #########################################
 
-# Fit logistic model(s) to Prunus surface data
-m_tpl_Pr_surf = nls(M ~ SSlogis(Time, A, xmid, scal), data = d_Pr_surf, start = list(A = max(d_Pr_surf$M), xmid = 100, scal = 40), algorithm = 'port')
+# Fit 3 parameter logistic model(s) to SESE surface data
+m2_tpl_T11_L_30 = nls(weight_perA ~ SSlogis(Minutes, A, xmid, scal), data = T11_L_30, start = list(A = max(T11_L_30$weight_perA), xmid = 100, scal = 40), algorithm = 'port')
 
 # Summarize model output
-summary(m_tpl_Pr_surf)
+summary(m2_tpl_T11_L_30)
+
 
 # Plot output
 plotFit(m_tpl_Pr_surf, interval = 'confidence', data = d_Pr_surf, shade = TRUE, xlim = c(0,450), ylim = c(0,20), cex = 1.25, cex.axis = 1.5, cex.main = 1.4, xaxt = 'n', yaxt = 'n', col.conf = 'grey90')
