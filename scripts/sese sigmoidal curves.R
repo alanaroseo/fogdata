@@ -23,6 +23,16 @@ fog <- as.data.frame(read.delim("clipboard"))
 ##########################################
 # Analyze water potential (psi) vs. time #
 ##########################################
+#fitting gompertz curves
+#function = Asym*exp(-b2*b3^x)
+#Asym 	a numeric parameter representing the asymptote.
+#b2 	a numeric parameter related to the value of the function at x = 0
+#b3 	a numeric parameter related to the scale the x axis.
+
+
+gomp_T11_L_30 <- nls(MPa_f ~ SSgompertz(Minutes, Asym, b2, b3), data = T11_L_30,  algorithm = "port")
+
+###############
 # Fit 4 parameter logistic model(s) to sese surface data
 
 
