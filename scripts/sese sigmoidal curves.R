@@ -41,7 +41,7 @@ summary(gomp_T11_L_30)
 #logistic, 3 parameters
 tpl_T11_L_30 = nls(MPa_f ~ SSlogis(Minutes, A, xmid, scal), data = T11_L_30, algorithm = 'port')
 
-tpl_T11_L_30 = nls(MPa_f ~ SSlogis(Minutes, A, xmid, scal), data = T11_L_30, start = list(A = max(T11_L_30$MPa_f), xmid = 100, scal = 40), algorithm = 'port')
+
 summary(tpl_T11_L_30)
 
 #four parameter logistic
@@ -51,34 +51,26 @@ fpl_T11_L_30 = nls(MPa_f ~ SSfpl(Minutes, A, B, xmid, scal), data = T11_L_30,  a
 summary(fpl_T11_L_30)
 
 ###############
-# Fit 4 parameter logistic model(s) to sese surface data
+# Fit 3 parameter logistic model(s) to sese surface data
 
 
 ########
 #T11
-names(fog)
+
 #T1130L
-m_fpl_T11_L_30 = nls(MPa_f ~ SSfpl(Minutes, A, B, xmid, scal), data = T11_L_30,  algorithm = "port")
+tpl_T11_L_30 = nls(MPa_f ~ SSlogis(Minutes, A, xmid, scal), data = T11_L_30, algorithm = 'port')
 
 # Summarize model output
-summary(m_fpl_T11_L_30)
-
-# Fit 3 parameter logistic model(s) to SESE surface data
-m_tpl_T11_L_30 = nls(MPa_f ~ SSlogis(Minutes, A, xmid, scal), data = T11_L_30,  algorithm = 'port')
-
-# Summarize model output
+summary(tpl_T11_L_30)
 
 
-ggplot(T11_L_30, aes(Minutes,MPa_f)) + 
-  geom_point()+
-  geom_abline (aes(coef(tpl_T11_L_30)))
-        
+#confidence interval and se for given point in the model, y0 must be an observed value
+invest(tpl_T11_L_30,  y0 = max(T11_L_30$MPa_f) ,interval = c("Wald"), level = 0.95, mean.response = TRUE)
 
-
+# Plot model output
 plot.new()#call a new plot
 par(mfrow=c(1,1))# Define plotting parameters to add multiple plots try par(mfrow=c(3,2), oma = c(3,3,3,1), mar = c(2,3,1,2))
 
-# Plot output
 plotFit(tpl_T11_L_30, interval = 'confidence', data = T11_L_30, xlim = c(0,150), ylim = c(0,.3), cex = 1.25, cex.axis = 1.5, cex.main = 1.4, xaxt = 'n', yaxt = 'n', col.conf = 'orchid')
 axis(1, at = c(0,50,100,150), cex.axis = 1.5, labels = FALSE)
 axis(2, at = c(0, .1, .2), cex.axis = 1.5, labels = TRUE)
