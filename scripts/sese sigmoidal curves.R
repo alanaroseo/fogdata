@@ -51,8 +51,8 @@ fpl_T11_L_30 = nls(MPa_f ~ SSfpl(Minutes, A, B, xmid, scal), data = T11_L_30,  a
 summary(fpl_T11_L_30)
 
 ###############
-# Fit 3 parameter logistic model(s) to sese surface data
-
+# Fit 3 parameter logistic models to sese surface data
+#logistic equation in the form of: A/(1+exp((xmid-x)/scal), where A=asymptote, xmid=inflection point
 
 ########
 #T11
