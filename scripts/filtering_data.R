@@ -1,3 +1,5 @@
+#loading data
+fog <- as.data.frame(read.delim("clipboard"))
 #filtering the data into subsets
 
 library(tidyverse)

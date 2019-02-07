@@ -21,16 +21,34 @@ fog <- as.data.frame(read.delim("clipboard"))
 
 
 ##########################################
-# Analyze water potential (psi) vs. time #
+# Analyze water potential (MPa) vs. time #
 ##########################################
 #fitting gompertz curves
-#function = Asym*exp(-b2*b3^x)
+
+#Gompertz function = Asym*exp(-b2*b3^x)
 #Asym 	a numeric parameter representing the asymptote.
 #b2 	a numeric parameter related to the value of the function at x = 0
-#b3 	a numeric parameter related to the scale the x axis.
+#b3 	a numeric parameter related to the scale of the x axis, should be less than 1.
 
+T11_L_30$neg_MPa_f <- -(T11_L_30$MPa_f)
 
-gomp_T11_L_30 <- nls(MPa_f ~ SSgompertz(Minutes, Asym, b2, b3), data = T11_L_30,  algorithm = "port")
+gomp_T11_L_30 <- nls(MPa_f ~ SSgompertz(Minutes, Asym, b2, b3), data = T11_L_30, start = list( b2 = max(T11_L_30$MPa_f), b3=-.4),  algorithm = "port") 
+
+gomp_T11_L_30 <- nls(neg_MPa_f ~ SSgompertz(Minutes, Asym, b2, b3), data = T11_L_30, start = list(Asym = 0.000001, b2 = min(T11_L_30$neg_MPa_f),b3=.9 ), lower = c(0, 0, 0, 0), upper = c(1000, 1000, 1000, 1000), algorithm = "port") 
+
+summary(gomp_T11_L_30)
+
+#logistic, 3 parameters
+tpl_T11_L_30 = nls(MPa_f ~ SSlogis(Minutes, A, xmid, scal), data = T11_L_30, algorithm = 'port')
+
+tpl_T11_L_30 = nls(MPa_f ~ SSlogis(Minutes, A, xmid, scal), data = T11_L_30, start = list(A = max(T11_L_30$MPa_f), xmid = 100, scal = 40), algorithm = 'port')
+summary(tpl_T11_L_30)
+
+#four parameter logistic
+
+fpl_T11_L_30 = nls(MPa_f ~ SSfpl(Minutes, A, B, xmid, scal), data = T11_L_30,  algorithm = "port")
+
+summary(fpl_T11_L_30)
 
 ###############
 # Fit 4 parameter logistic model(s) to sese surface data
@@ -49,22 +67,21 @@ summary(m_fpl_T11_L_30)
 m_tpl_T11_L_30 = nls(MPa_f ~ SSlogis(Minutes, A, xmid, scal), data = T11_L_30,  algorithm = 'port')
 
 # Summarize model output
-summary(m_tpl_T11_L_30)
-anova(m_tpl_T11_L_30,m_fpl_T11_L_30)
+
 
 ggplot(T11_L_30, aes(Minutes,MPa_f)) + 
-  geom_point() 
+  geom_point()+
+  geom_abline (aes(coef(tpl_T11_L_30)))
         
 
 
-# Define plotting parameters
-par(mfrow=c(3,2), oma = c(3,3,3,1), mar = c(2,3,1,2))
+plot.new()#call a new plot
+par(mfrow=c(1,1))# Define plotting parameters to add multiple plots try par(mfrow=c(3,2), oma = c(3,3,3,1), mar = c(2,3,1,2))
 
 # Plot output
-plotFit(m_fpl_T11_L_30, interval = 'confidence', data = T11_L_30, xlim = c(0,450), ylim = c(0,2.5), shade = TRUE,  cex = 1.25, cex.axis = 1.5, cex.main = 1.4, xaxt = 'n', yaxt = 'n', col.conf = 'grey90')
-abline(v = coef(summary(m_fpl_T11_L_30))[3,1], lty = 2)
-axis(1, at = c(0,150,300,450), cex.axis = 1.5, labels = FALSE)
-axis(2, at = c(0, 1.25, 2.5), cex.axis = 1.5, labels = TRUE)
+plotFit(tpl_T11_L_30, interval = 'confidence', data = T11_L_30, xlim = c(0,150), ylim = c(0,.3), cex = 1.25, cex.axis = 1.5, cex.main = 1.4, xaxt = 'n', yaxt = 'n', col.conf = 'orchid')
+axis(1, at = c(0,50,100,150), cex.axis = 1.5, labels = FALSE)
+axis(2, at = c(0, .1, .2), cex.axis = 1.5, labels = TRUE)
 mtext(expression(paste('-',Psi, ' [MPa]')), side = 2, cex = 1.1, line = 3)
 mtext(expression('T11 30 L'), side = 3, cex = 1.1, line = 1)
 
