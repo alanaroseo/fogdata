@@ -21,135 +21,137 @@ fog <- as.data.frame(read.delim("clipboard"))
 
 
 ##########################################
-# Analyze water potential (psi) vs. time #
+# Analyze water potential (MPa) vs. time #
 ##########################################
-# Fit 4 parameter logistic model(s) to sese surface data
+#fitting gompertz curves
 
+#Gompertz function = Asym*exp(-b2*b3^x)
+#Asym 	a numeric parameter representing the asymptote.
+#b2 	a numeric parameter related to the value of the function at x = 0
+#b3 	a numeric parameter related to the scale of the x axis, should be less than 1.
+
+T11_L_30$neg_MPa_f <- -(T11_L_30$MPa_f)
+
+gomp_T11_L_30 <- nls(MPa_f ~ SSgompertz(Minutes, Asym, b2, b3), data = T11_L_30, start = list( b2 = max(T11_L_30$MPa_f), b3=-.4),  algorithm = "port") 
+
+gomp_T11_L_30 <- nls(neg_MPa_f ~ SSgompertz(Minutes, Asym, b2, b3), data = T11_L_30, start = list(Asym = 0.000001, b2 = min(T11_L_30$neg_MPa_f),b3=.9 ), lower = c(0, 0, 0, 0), upper = c(1000, 1000, 1000, 1000), algorithm = "port") 
+
+summary(gomp_T11_L_30)
+
+#logistic, 3 parameters
+tpl_T11_L_30 = nls(MPa_f ~ SSlogis(Minutes, A, xmid, scal), data = T11_L_30, algorithm = 'port')
+
+
+summary(tpl_T11_L_30)
+
+#four parameter logistic
+
+fpl_T11_L_30 = nls(MPa_f ~ SSfpl(Minutes, A, B, xmid, scal), data = T11_L_30,  algorithm = "port")
+
+summary(fpl_T11_L_30)
+
+###############
+# Fit 3 parameter logistic models to sese surface data
+#logistic equation in the form of: A/(1+exp((xmid-x)/scal), where A=asymptote, xmid=inflection point
 
 ########
 #T11
-names(fog)
+
 #T1130L
-m_fpl_T11_L_30 = nls(MPa_f ~ SSfpl(Minutes, A, B, xmid, scal), data = T11_L_30,  algorithm = "port")
+tpl_T11_L_30 = nls(MPa_f ~ SSlogis(Minutes, A, xmid, scal), data = T11_L_30, algorithm = 'port')
 
 # Summarize model output
-summary(m_fpl_T11_L_30)
-
-# Fit 3 parameter logistic model(s) to SESE surface data
-m_tpl_T11_L_30 = nls(MPa_f ~ SSlogis(Minutes, A, xmid, scal), data = T11_L_30,  algorithm = 'port')
-
-# Summarize model output
-summary(m_tpl_T11_L_30)
-anova(m_tpl_T11_L_30,m_fpl_T11_L_30)
-
-ggplot(T11_L_30, aes(Minutes,MPa_f)) + 
-  geom_point() 
-        
+summary(tpl_T11_L_30)
 
 
-# Define plotting parameters
-par(mfrow=c(3,2), oma = c(3,3,3,1), mar = c(2,3,1,2))
+#confidence interval and se for given point in the model, y0 must be an observed value
+invest(tpl_T11_L_30,  y0 = max(T11_L_30$MPa_f) ,interval = c("Wald"), level = 0.95, mean.response = TRUE)
 
-# Plot output
-plotFit(m_fpl_T11_L_30, interval = 'confidence', data = T11_L_30, xlim = c(0,450), ylim = c(0,2.5), shade = TRUE,  cex = 1.25, cex.axis = 1.5, cex.main = 1.4, xaxt = 'n', yaxt = 'n', col.conf = 'grey90')
-abline(v = coef(summary(m_fpl_T11_L_30))[3,1], lty = 2)
-axis(1, at = c(0,150,300,450), cex.axis = 1.5, labels = FALSE)
-axis(2, at = c(0, 1.25, 2.5), cex.axis = 1.5, labels = TRUE)
-mtext(expression(paste('-',Psi, ' [MPa]')), side = 2, cex = 1.1, line = 3)
+# Plot model output
+plot.new()#call a new plot
+par(mfrow=c(1,1))# Define plotting parameters to add multiple plots try par(mfrow=c(3,2), oma = c(3,3,3,1), mar = c(2,3,1,2))
+
+plotFit(tpl_T11_L_30, interval = 'confidence', data = T11_L_30, xlim = c(0,150), ylim = c(0,.3), cex = 1.25, cex.axis = 1.5, cex.main = 1.4, xaxt = 'n', yaxt = 'n',col.fit ='salmon', col.conf = 'orchid', col='blue')
+axis(1, at = c(0,50,100,150), cex.axis = 1, labels = TRUE)
+axis(2, at = c(0, .1, .2), cex.axis = 1, labels = TRUE)
+mtext(expression(paste('-', Psi, '  [MPa]')), side = 2, cex = 1.1, line = 3)
 mtext(expression('T11 30 L'), side = 3, cex = 1.1, line = 1)
 
+
 #T1150L
-m_fpl_T11_L_50 = nls(MPa_f ~ SSfpl(Minutes, A, B, xmid, scal), data = T11_L_50, start = list(A = max(T11_L_50$MPa_f), B = 0, xmid = 100, scal = 40), lower = c(0, 0, 0, 0), upper = c(1000, 1000, 1e5, 10000), algorithm = "port")
-
-# Summarize model output
-summary(m_fpl_T11_L_50)
 
 
 
-# Define plotting parameters
-par(mfrow=c(3,2), oma = c(3,3,3,1), mar = c(2,3,1,2))
-
-# Plot output
-plotFit(m_fpl_T11_L_50, interval = 'confidence', data = d_Pr_surf, xlim = c(0,450), ylim = c(0,2.5), shade = TRUE, main = titles[i], cex = 1.25, cex.axis = 1.5, cex.main = 1.4, xaxt = 'n', yaxt = 'n', col.conf = 'grey90')
-#abline(v = coef(summary(m_fpl_T11_L_50))[3,1], lty = 2)
-axis(1, at = c(0,150,300,450), cex.axis = 1.5, labels = FALSE)
-axis(2, at = c(0, 1.25, 2.5), cex.axis = 1.5, labels = TRUE)
-mtext(expression(paste('-',Psi, ' [MPa]')), side = 2, cex = 1.1, line = 3)
-mtext(expression('T11 50 L'), side = 3, cex = 1.1, line = 1)
 
 
 #########################################
 # Analyze change in g water vs. time #
 #########################################
-
-# Fit 3 parameter logistic model(s) to SESE surface data
-m2_tpl_T11_L_30 = nls(weight_perA ~ SSlogis(Minutes, A, xmid, scal), data = T11_L_30, start = list(A = max(T11_L_30$weight_perA), xmid = 100, scal = 40), algorithm = 'port')
-
-# Summarize model output
-summary(m2_tpl_T11_L_30)
-
-
-# Plot output
-plotFit(m_tpl_Pr_surf, interval = 'confidence', data = d_Pr_surf, shade = TRUE, xlim = c(0,450), ylim = c(0,20), cex = 1.25, cex.axis = 1.5, cex.main = 1.4, xaxt = 'n', yaxt = 'n', col.conf = 'grey90')
-axis(1, at = c(0,150,300,450), cex.axis = 1.5, labels = FALSE)
-axis(2, at = c(0, 10, 20), cex.axis = 1.5, labels = TRUE)
-mtext(expression(paste(Delta, 'M [g ', m^-2, ']')), side = 2, cex = 1.1, line = 3)
-
-# Fit logistic model(s) to Quercus surface mass data
-m_tpl_Qu_surf = nls(M ~ SSlogis(Time, A, xmid, scal), data = d_Qu_surf, start = list(A = max(d_Qu_surf$M), xmid = 100, scal = 40), algorithm = 'port')
-
+#T1130L
+g_tpl_T11_L_30 = nls(weight_perA ~ SSlogis(Minutes, A, xmid, scal), data = T11_L_30, algorithm = 'port')
 
 # Summarize model output
-summary(m_tpl_Qu_surf)
-
-# Plot output
-plotFit(m_tpl_Qu_surf, interval = 'confidence', data = d_Qu_surf, shade = TRUE, xlim = c(0,450), ylim = c(0,20), cex = 1.25, cex.axis = 1.5, cex.main = 1.4, xaxt = 'n', yaxt = 'n', col.conf = 'grey90')
-axis(1, at = c(0,150,300,450), cex.axis = 1.5, labels = FALSE)
-axis(2, at = c(0, 10, 20), cex.axis = 1.5, labels = FALSE)
+summary(g_tpl_T11_L_30)
 
 
 ######################################
 # Calculate instantaneous resistance #
 ######################################
 
+#coef()[1]=A, coef()[2]=xmid, coef()[3]=scal
+#form = coef()[1]/(1+exp((coef()[2]-x)/coef()[3])
+#T11_L_30
+
+#library(Deriv)
+#fTll_30_L<- function(x){ coef(g_tpl_T11_L_30)[1]/(1+exp((coef(g_tpl_T11_L_30)[2]-x)/coef(g_tpl_T11_L_30)[3]))}
+                  
+#d_fTll_30_L <- Deriv(fTll_30_L, x=T11_L_30$weight_perA)
+#plot(fTll_30_L(T11_L_30$weight_perA))
+
+x <- T11_L_30$weight_perA
+A <- coef(g_tpl_T11_L_30)[1]
+xmid <- coef(g_tpl_T11_L_30)[2]
+scal <- coef(g_tpl_T11_L_30)[3]
+d_fT11_30_L <- Deriv(A/(1+exp((xmid-x)/scal)),x)
+
+plot(d_fT11_30_L)
+
 # Time interval for prediction
-d_Time = seq(0,450,1)
+d_Time = seq(0,150,1)
 
-# Prunus 
 # Estimate water potential over time
-WP = predict(m_fpl_Pr_surf_WP, newdata = list(Time = d_Time))
+WP = predict(tpl_T11_L_30, newdata = list(Minutes = d_Time))
 
 # Estimate change in mass over time
-dM_dt = diff(predict(m_tpl_Pr_surf, newdata = list(Time = d_Time)))
+dM_dt = diff(predict(g_tpl_T11_L_30, newdata = list(Minutes = d_Time)))
+
+#maximum uptake rate (flux):
+max(dM_dt)
+
+
 
 # Calculate instantaneous conductance
-K_surf_Pr = dM_dt/WP[-1]/60
-R_surf_Pr = 1/K_surf_Pr
+K_T11_30_L = dM_dt/WP[-1]/60
+R_T11_30_L = 1/K_T11_30_L
 
-# Quercus
-# Estimate water potential over time
-WP = predict(m_fpl_Qu_surf_WP, newdata = list(Time = d_Time))
 
-# Estimate change in mass over time
-dM_dt = diff(predict(m_tpl_Qu_surf, newdata = list(Time = d_Time)))
+par(mfrow=c(1,2))
+#Plot K_surf for T11_30_L
+plot(K_T11_30_L, type = 'l', ylim = c(0,0.03), cex = 1.25, cex.axis = 1.5, cex.main = 1.4, xaxt = 'n', yaxt = 'n', xlab = '', ylab = '',col = "purple")
+axis(1, at = c(0,50,100,150), cex.axis = 1)
+axis(2, at = c(0, .01,0.02, 0.03), cex.axis = 1, labels = TRUE)
+mtext(expression(paste(' [g ', m^-2, ' ', s^-1, ' ', MPa^-1, ']')), side = 2, cex = 1.1, line = 3)
+mtext(expression(paste('rehydration time [mins]')), side = 1, cex = 1.2, line = 1, outer = TRUE)
+mtext(expression(paste('T11_30_L[surf] conductance')), side = 3, cex = 1.2, line = 1, outer = TRUE)
 
-# Calculate instantaneous conductance
-K_surf_Qu = dM_dt/WP[-1]/60
-R_surf_Qu = 1/K_surf_Qu
+plot(R_T11_30_L, type = 'l', ylim = c(0,60000), cex = 1.25, cex.axis = 1.5, cex.main = 1.4, xaxt = 'n', yaxt = 'n',  xlab = '', ylab = '', col = "purple")
+axis(1, at = c(0,50,100,150), cex.axis = 1)
+axis(2, at = c(0, 20000,40000, 60000), cex.axis = 1, labels = TRUE)
+mtext(expression(paste('rehydration time [mins]')), side = 1, cex = 1.2, line = 1, outer = TRUE)
+mtext(expression(paste('T11_30_L  resistance')), side = 3, cex = 1.2, line = 1)
 
-# Plot K_surf for Prunus
-plot(K_surf_Pr, type = 'l', ylim = c(0,0.002), cex = 1.25, cex.axis = 1.5, cex.main = 1.4, xaxt = 'n', yaxt = 'n', col.conf = 'grey90', xlab = '', ylab = '')
-axis(1, at = c(0,150,300,450), cex.axis = 1.5)
-axis(2, at = c(0, 0.001, 0.002), cex.axis = 1.5, labels = TRUE)
-mtext(expression(paste(K[surf], ' [g ', m^-2, ' ', s^-1, ' ', MPa^-1, ']')), side = 2, cex = 1.1, line = 3)
+plot(R_T11_30_L)
 
-# Plot K_surf for Quercus
-plot(K_surf_Qu, type = 'l', ylim = c(0,0.002), cex = 1.25, cex.axis = 1.5, cex.main = 1.4, xaxt = 'n', yaxt = 'n', col.conf = 'grey90', xlab = '', ylab = '')
-axis(1, at = c(0,150,300,450), cex.axis = 1.5)
-axis(2, at = c(0, 0.001, 0.002), cex.axis = 1.5, labels = FALSE)
-
-# Add axis label for time
-mtext('rehydration time [mins]', side = 1, cex = 1.2, line = 1, outer = TRUE)
 
 # Close active plotting device
 dev.off()
