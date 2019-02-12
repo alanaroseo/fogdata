@@ -72,10 +72,11 @@ plot.new()#call a new plot
 par(mfrow=c(1,1))# Define plotting parameters to add multiple plots try par(mfrow=c(3,2), oma = c(3,3,3,1), mar = c(2,3,1,2))
 
 plotFit(tpl_T11_L_30, interval = 'confidence', data = T11_L_30, xlim = c(0,150), ylim = c(0,.3), cex = 1.25, cex.axis = 1.5, cex.main = 1.4, xaxt = 'n', yaxt = 'n',col.fit ='salmon', col.conf = 'orchid', col='blue')
-axis(1, at = c(0,50,100,150), cex.axis = 1.5, labels = FALSE)
+axis(1, at = c(0,50,100,150), cex.axis = 1, labels = TRUE)
 axis(2, at = c(0, .1, .2), cex.axis = 1, labels = TRUE)
-mtext(expression(paste('-',Psi, ' [MPa]')), side = 2, cex = 1.1, line = 3)
+mtext(expression(paste('-', Psi, '  [MPa]')), side = 2, cex = 1.1, line = 3)
 mtext(expression('T11 30 L'), side = 3, cex = 1.1, line = 1)
+
 
 #T1150L
 
@@ -96,7 +97,25 @@ summary(g_tpl_T11_L_30)
 ######################################
 # Calculate instantaneous resistance #
 ######################################
+
+#coef()[1]=A, coef()[2]=xmid, coef()[3]=scal
+#form = coef()[1]/(1+exp((coef()[2]-x)/coef()[3])
 #T11_L_30
+
+#library(Deriv)
+#fTll_30_L<- function(x){ coef(g_tpl_T11_L_30)[1]/(1+exp((coef(g_tpl_T11_L_30)[2]-x)/coef(g_tpl_T11_L_30)[3]))}
+                  
+#d_fTll_30_L <- Deriv(fTll_30_L, x=T11_L_30$weight_perA)
+#plot(fTll_30_L(T11_L_30$weight_perA))
+
+x <- T11_L_30$weight_perA
+A <- coef(g_tpl_T11_L_30)[1]
+xmid <- coef(g_tpl_T11_L_30)[2]
+scal <- coef(g_tpl_T11_L_30)[3]
+d_fT11_30_L <- Deriv(A/(1+exp((xmid-x)/scal)),x)
+
+plot(d_fT11_30_L)
+
 # Time interval for prediction
 d_Time = seq(0,150,1)
 
@@ -106,6 +125,11 @@ WP = predict(tpl_T11_L_30, newdata = list(Minutes = d_Time))
 # Estimate change in mass over time
 dM_dt = diff(predict(g_tpl_T11_L_30, newdata = list(Minutes = d_Time)))
 
+#maximum uptake rate (flux):
+max(dM_dt)
+
+
+
 # Calculate instantaneous conductance
 K_T11_30_L = dM_dt/WP[-1]/60
 R_T11_30_L = 1/K_T11_30_L
@@ -113,14 +137,14 @@ R_T11_30_L = 1/K_T11_30_L
 
 par(mfrow=c(1,2))
 #Plot K_surf for T11_30_L
-plot(K_T11_30_L, type = 'l', ylim = c(0,0.03), cex = 1.25, cex.axis = 1.5, cex.main = 1.4, xaxt = 'n', yaxt = 'n', xlab = '', ylab = '',col = "dark red")
+plot(K_T11_30_L, type = 'l', ylim = c(0,0.03), cex = 1.25, cex.axis = 1.5, cex.main = 1.4, xaxt = 'n', yaxt = 'n', xlab = '', ylab = '',col = "purple")
 axis(1, at = c(0,50,100,150), cex.axis = 1)
 axis(2, at = c(0, .01,0.02, 0.03), cex.axis = 1, labels = TRUE)
 mtext(expression(paste(' [g ', m^-2, ' ', s^-1, ' ', MPa^-1, ']')), side = 2, cex = 1.1, line = 3)
 mtext(expression(paste('rehydration time [mins]')), side = 1, cex = 1.2, line = 1, outer = TRUE)
 mtext(expression(paste('T11_30_L[surf] conductance')), side = 3, cex = 1.2, line = 1, outer = TRUE)
 
-plot(R_T11_30_L, type = 'l', ylim = c(0,60000), cex = 1.25, cex.axis = 1.5, cex.main = 1.4, xaxt = 'n', yaxt = 'n',  xlab = '', ylab = '')
+plot(R_T11_30_L, type = 'l', ylim = c(0,60000), cex = 1.25, cex.axis = 1.5, cex.main = 1.4, xaxt = 'n', yaxt = 'n',  xlab = '', ylab = '', col = "purple")
 axis(1, at = c(0,50,100,150), cex.axis = 1)
 axis(2, at = c(0, 20000,40000, 60000), cex.axis = 1, labels = TRUE)
 mtext(expression(paste('rehydration time [mins]')), side = 1, cex = 1.2, line = 1, outer = TRUE)
