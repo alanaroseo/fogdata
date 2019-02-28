@@ -24,8 +24,13 @@ ggplot(data = GL, aes(x = rel_ht, y = percent_G )) +
   theme_classic()+
   facet_wrap(~forest)
 
+ggplot(data = GL, aes( y = percent_G , x=site)) +
+  geom_boxplot(aes(color= site,group=site), alpha = .3)+
+  theme_classic()
+  
+
 plot(percent_G~forest, data =GL)
 
 t.test(percent_G~forest, data =GL)
 
-plot(percent_G~site, data =GL)
+plot(percent_G~site, color="GL$site", data =GL)
