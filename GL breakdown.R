@@ -10,7 +10,14 @@ names(GL)
 ggplot(data = GL, aes(x = rel_ht, y = percent_G )) +
   geom_point( alpha = .7)+
   theme_classic()+
-  geom_smooth(method=lm, se=FALSE, aes(color = site))+
+  geom_smooth(method=lm, se=TRUE)+
+  facet_wrap(~forest)
+
+
+ggplot(data = GL, aes(x = branch_ht, y = percent_G )) +
+  geom_point( alpha = .7)+
+  theme_classic()+
+  geom_smooth(method=lm, se=TRUE)+
   facet_wrap(~forest)
 
 ggplot(data = GL, aes(x = branch_ht, y = percent_G )) +
