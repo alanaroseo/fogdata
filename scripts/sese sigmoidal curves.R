@@ -2,7 +2,7 @@
 # Alana's modification of                 #
 #"Foliar Rehydration Kinetics" script     #
 #                                         #
-# Fit three and four parameter logistic   #
+#  Fit nonlinear                          #
 #  models to foliar rehydration data      #
 #  and calculate instantaneous resistance #
 #                                         #
@@ -55,7 +55,7 @@ summary(fpl_T11_L_30)
 # Fit 3 parameter logistic models to sese surface data
 #logistic equation in the form of: A/(1+exp((xmid-x)/scal), where A=asymptote, xmid=inflection point
 
-########
+#####
 #T11
 
 #T1130L
@@ -80,6 +80,7 @@ r.sq <- 1 - rss/tss
 adj.r.sq <- 1 - (1 - r.sq) * (n - int.df) / r.df
 R2_tpl_T11_L_30 <- list(pseudo.R.squared = r.sq,
             adj.R.squared = adj.r.sq)
+
 R2_tpl_T11_L_30
 
 
@@ -168,7 +169,7 @@ axis(2, at = c(0, .3,.6, 1), cex.axis = 1, labels = TRUE)
 mtext(expression(paste('-', Psi, '  [MPa]')), side = 2, cex = 1.1, line = 3)
 mtext(expression('T11 90 L'), side = 3, cex = 1.1, line = 1)
 
-##### 
+#####
 #T6
 
 #T6_L_20
@@ -647,14 +648,47 @@ mtext(expression(paste('-', Psi, '  [MPa]')), side = 2, cex = 1.1, line = 3)
 mtext(expression('T48 60 L'), side = 3, cex = 1.1, line = 1)
 
 
-#########################################
-# Analyze change in g water vs. time #
-#########################################
-##Fit curves
+############################################
+# Analyze change in g water/area  vs. time #
+############################################
+
+##### Fit curves
+
+names(T11_L_30)
 #exponential 
-exp_T11_L_30 = nls(weight_perA  ~ exp(Minutes), data = T11_L_30, start = c( weight_perA  = min(T11_L_30$weight_perA ), Minutes=0))
+exp_T11_L_30 = nls(exp(weight_perA)  ~ Minutes, data = T11_L_30, start = c( weight_perA  = min(T11_L_30$weight_perA ), Minutes=0))
 
 summary(exp_T11_L_30)
+
+#lm()  
+lm_T11_L_30 <- lm(weight_perA ~ Minutes, data = T11_L_30)
+
+summary(lm_T11_L_30)
+
+#lm()  exponetial model - shitty
+exp_lm_T11_L_30 <- lm(exp(weight_perA) ~ Minutes, data = T11_L_30)
+
+summary(exp_lm_T11_L_30)
+
+#gompertz curve - not gonna work with negative values
+
+gomp_T11_L_30 <- nls(weight_perA ~ SSgompertz(Minutes, Asym, b2, b3), data = T11_L_30,  algorithm = "port") 
+
+summary(gomp_T11_L_30)
+
+#3rd order polynominal because of negative values, 2nd order preformed worse than 3rd
+
+poly3_T11_L_30 <- lm(data= T11_L_30, weight_perA ~ poly(Minutes,3))
+
+summary(poly3_T11_L_30)
+
+anova(poly3_T11_L_30,lm_T11_L_30)
+
+AIC(poly3_T11_L_30)
+AIC(lm_T11_L_30)
+
+AIC(g_tpl_T11_L_30)
+AIC(expfit_T11_L_30)
 
 #T1130L
 g_tpl_T11_L_30 = nls(weight_perA ~ SSlogis(Minutes, A, xmid, scal), data = T11_L_30, algorithm = 'port')
