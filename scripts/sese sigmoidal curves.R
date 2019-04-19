@@ -15,6 +15,7 @@ library(ggplot2)
 library(gridExtra)
 library(grid)
 library(investr)
+library(AICcmodavg)
 
 ##### Load data #####
 fog <- as.data.frame(read.delim("clipboard"))
@@ -55,6 +56,7 @@ summary(fpl_T11_L_30)
 # Fit 3 parameter logistic models to sese surface data
 #logistic equation in the form of: A/(1+exp((xmid-x)/scal), where A=asymptote, xmid=inflection point
 
+#T11:
 #####
 #T11
 
@@ -169,6 +171,7 @@ axis(2, at = c(0, .3,.6, 1), cex.axis = 1, labels = TRUE)
 mtext(expression(paste('-', Psi, '  [MPa]')), side = 2, cex = 1.1, line = 3)
 mtext(expression('T11 90 L'), side = 3, cex = 1.1, line = 1)
 
+#T6:
 #####
 #T6
 
@@ -278,6 +281,7 @@ axis(2, at = c(0, .2,.4,.6,.8, 1), cex.axis = 1, labels = TRUE)
 mtext(expression(paste('-', Psi, '  [MPa]')), side = 2, cex = 1.1, line = 3)
 mtext(expression('T6 91 L'), side = 3, cex = 1.1, line = 1)
 
+#T8:
 #####
 #T8
 
@@ -388,6 +392,7 @@ axis(2, at = c(0, .2,.4,.6,.8, 1), cex.axis = 1, labels = TRUE)
 mtext(expression(paste('-', Psi, '  [MPa]')), side = 2, cex = 1.1, line = 3)
 mtext(expression('T8 97 L'), side = 3, cex = 1.1, line = 1)
 
+#T16:
 #####
 #T16
 
@@ -463,6 +468,7 @@ axis(2, at = c(0, .2,.4,.6,.8, 1), cex.axis = 1, labels = TRUE)
 mtext(expression(paste('-', Psi, '  [MPa]')), side = 2, cex = 1.1, line = 3)
 mtext(expression('T16 37 L'), side = 3, cex = 1.1, line = 1)
 
+#T34:
 #####
 #T34
 
@@ -609,6 +615,7 @@ mtext(expression(paste('-', Psi, '  [MPa]')), side = 2, cex = 1.1, line = 3)
 mtext(expression('T34 102 L'), side = 3, cex = 1.1, line = 1)
 
 
+#T48
 #####
 #T48
 
@@ -661,9 +668,9 @@ exp_T11_L_30 = nls(exp(weight_perA)  ~ Minutes, data = T11_L_30, start = c( weig
 summary(exp_T11_L_30)
 
 #lm()  
-lm_T11_L_30 <- lm(weight_perA ~ Minutes, data = T11_L_30)
+lm_T11_L_50 <- lm(weight_perA ~ Minutes, data = T11_L_50)
 
-summary(lm_T11_L_30)
+summary(lm_T11_L_50)
 
 #lm()  exponetial model - shitty
 exp_lm_T11_L_30 <- lm(exp(weight_perA) ~ Minutes, data = T11_L_30)
