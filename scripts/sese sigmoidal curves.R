@@ -21,7 +21,7 @@ library(AICcmodavg)
 fog <- as.data.frame(read.delim("clipboard"))
 
 
-##########################################
+#########################################
 # Analyze water potential (MPa) vs. time #
 ##########################################
 ######Trying different curves for MPa
@@ -655,6 +655,8 @@ mtext(expression(paste('-', Psi, '  [MPa]')), side = 2, cex = 1.1, line = 3)
 mtext(expression('T48 60 L'), side = 3, cex = 1.1, line = 1)
 
 
+
+#Trying different cure families for weight gain:
 ############################################
 # Analyze change in g water/area  vs. time #
 ############################################
@@ -712,6 +714,7 @@ axis(1, at = c(0,50,100,150), cex.axis = 1, labels = TRUE)
 axis(2, at = c(-5, 4, 9), cex.axis = 1, labels = TRUE)
 mtext(expression(paste( Delta, '  g', ' water' ,'/','m^2' )), side = 2, cex = 1.1, line = 3)
 mtext(expression('T11 30 L'), side = 3, cex = 1.1, line = 1)
+
 
 
 
