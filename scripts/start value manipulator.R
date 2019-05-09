@@ -22,9 +22,8 @@ library(manipulate)
 # Analyze change in g water/area  vs. time #
 ############################################
 
+# T11 ---------------------------------------------------------------------
 
-#####
-#T11
 
 #T11 30
 
@@ -232,9 +231,12 @@ summary(lm_T11_L_90)
 anova(expfit_T11_L_90,lm_T11_L_90)
 AICc(expfit_T11_L_90)
 AICc(lm_T11_L_90)
+#T11
 
-#####
 #T16
+
+# T16 ---------------------------------------------------------------------
+
 
 #T16 37.5
 
@@ -373,8 +375,13 @@ anova(expfit_T16_L_51,lm_T16_L_51)
 AICc(expfit_T16_L_51)
 AICc(lm_T16_L_51)
 
-#####
+
 #T6
+
+#T6
+
+# T6 ----------------------------------------------------------------------
+
 
 #T6 20
 
@@ -579,9 +586,10 @@ AICc(expfit_T6_L_91)
 AICc(lm_T6_L_91)
 
 
-#####
 
 #T8
+
+# T8 ----------------------------------------------------------------------
 
 #T8 50
 
@@ -797,8 +805,11 @@ AICc(expfit_T8_L_97)
 AICc(lm_T8_L_97)
 
 
-#####
+
 #T34
+
+# T34 ---------------------------------------------------------------------
+
 
 #T34 56
 
@@ -1081,7 +1092,11 @@ AICc(expfit_T34_L_102)
 AICc(lm_T34_L_102)
 
 
-#####
+
+#T48 
+
+# T48 ---------------------------------------------------------------------
+
 
 #T48
 
@@ -1153,3 +1168,46 @@ plot(lm_T48_L_60)
 anova(expfit_T48_L_60,lm_T48_L_60)
 AICc(expfit_T48_L_60)
 AICc(lm_T48_L_60)
+AICc(model)
+
+
+#poly and ln fit
+#####
+#fit ln
+#T48 60
+startln_T48_L_60 <- list()     # Make an empty list for the starting values
+
+#exponential curve manipulator, use sliders to adjust parameters until the curve fits the data
+manipulate(
+  {
+    plot(T48_L_60$Minutes, T48_L_60$weight_perA)#plot observed data
+    a <- aa; b <- b00
+    curve(a*log(x) + b, add=TRUE)
+    startln_T48_L_60 <<- list(a=a, b=b)
+  },
+  aa=slider(1, 15, step = 0.001,  initial = 8),
+  b00=slider(-30, 1, step=0.001,initial= -27))
+
+model <- nls(weight_perA~I(a*log(Minutes)+b),data=T48_L_60,
+             start=startln_T48_L_60)#that's a big NO
+
+#fit polynominal
+#T48 60
+startply_T48_L_60 <- list()     # Make an empty list for the starting values
+
+#polynominal curve manipulator, use sliders to adjust parameters until the curve fits the data
+manipulate(
+  {
+    plot(T48_L_60$Minutes, T48_L_60$weight_perA)#plot observed data
+    a <- aa; b <- b00; c <- cc
+    curve(-c*x^2+a*x-b, add=TRUE, col="blue")
+    startply_T48_L_60 <<- list(a=a, b=b)
+  },
+  aa=slider(-10, 10, step = 0.001,  initial = -1),
+  b00=slider(-1, 1, step=0.0000001,initial= -0.001),
+  cc=slider(-10, 10, step=0.001,initial= 0)
+)
+model <- nls(weight_perA~I(c*((Minutes)^2)+a*Minutes-b),data=T48_L_60,
+             start=startply_T48_L_60)
+
+summary(model)
