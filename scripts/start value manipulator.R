@@ -1,6 +1,6 @@
 
 ###########################################
-# Alana's script for exponetial           #
+# Alana's script for exponential          #
 #      and linear models                  #
 #                                         #
 #  Fit nls and lm                         #
@@ -800,6 +800,77 @@ AICc(lm_T8_L_97)
 #####
 #T34
 
+#T34 56
+
+start_T34_L_56 <- list()     # Make an empty list for the starting values
+
+#exponential curve manipulator, use sliders to adjust parameters until the curve fits the data
+manipulate(
+  {
+    plot(T34_L_56$Minutes, T34_L_56$weight_perA)#plot observed data
+    k <- kk; b0 <- b00; b1 <- b10
+    curve(k*exp(-b1*x) + b0, add=TRUE)
+    start_T34_L_56 <<- list(k=k, b0=b0, b1=b1)
+  },
+  kk=slider(-1, 1, step = 0.001,  initial = 0.03),
+  b10=slider(-1, 1, step = 0.001, initial = -.03),
+  b00=slider(-1, 1, step=0.001,initial= 0))
+
+# When the slider box closes start_data() becomes a list of named parameters for use as start values
+
+#print start values:
+start_T34_L_56
+
+# Model fit using the start values:
+expfit_T34_L_56 <- nls(weight_perA ~ I(k*exp(-b1*Minutes) + b0), data= T34_L_56, start = start_T34_L_56, control = list(maxiter = 1000, minFactor = .0000009))
+
+summary(expfit_T34_L_56)
+
+
+
+#roughly check fit using Efron's pseudo R2
+pred <- predict(expfit_T34_L_56)
+n <- length(pred)
+res <- resid(expfit_T34_L_56)
+w <- weights(expfit_T34_L_56)
+if (is.null(w)) w <- rep(1, n)
+rss <- sum(w * res ^ 2)
+resp <- pred + res
+center <- weighted.mean(resp, w)
+r.df <- summary(expfit_T34_L_56)$df[2]
+int.df <- 1
+tss <- sum(w * (resp - center)^2)
+r.sq <- 1 - rss/tss
+adj.r.sq <- 1 - (1 - r.sq) * (n - int.df) / r.df
+R2_expfit_T34_L_56 <- list(pseudo.R.squared = r.sq,
+                          adj.R.squared = adj.r.sq)
+
+R2_expfit_T34_L_56
+
+
+# Plot model output
+plot.new()#call a new plot
+par(mfrow=c(1,1))# Define plotting parameters to add multiple plots try par(mfrow=c(3,2), oma = c(3,3,3,1), mar = c(2,3,1,2))
+
+plotFit(expfit_T34_L_56, interval = 'confidence', data = T34_L_56, xlim = c(0,max(T34_L_56$Minutes)), ylim = c(-10, 1+max(T34_L_56$weight_perA)), cex = 1.25, cex.axis = 1.5, cex.main = 1.4, ylab = '' ,xaxt = 'n', yaxt = 'n',col.fit ='salmon', col.conf = 'orchid', col='blue')
+axis(1, at = c(0,.5*max(T34_L_56$Minutes),max(T34_L_56$Minutes)), cex.axis = 1, labels = TRUE)
+axis(2, at = c(0, 10,20,40,60,80, 100), cex.axis = 1, labels = TRUE)
+mtext(expression(paste('g  ', 'per', '  m^2')), side = 2, cex = 1.1, line = 3)
+mtext(expression('T34 56 L'), side = 3, cex = 1.1, line = 1)
+
+#compare to lm
+lm_T34_L_56 <- lm(weight_perA ~ Minutes, data = T34_L_56)
+
+summary(lm_T34_L_56)
+
+plot(lm_T34_L_56)
+
+anova(expfit_T34_L_56,lm_T34_L_56)
+AICc(expfit_T34_L_56)
+AICc(lm_T34_L_56)
+
+
+
 #T34 22
 
 start_T34_L_22 <- list()     # Make an empty list for the starting values
@@ -843,7 +914,7 @@ tss <- sum(w * (resp - center)^2)
 r.sq <- 1 - rss/tss
 adj.r.sq <- 1 - (1 - r.sq) * (n - int.df) / r.df
 R2_expfit_T34_L_22 <- list(pseudo.R.squared = r.sq,
-                          adj.R.squared = adj.r.sq)
+                           adj.R.squared = adj.r.sq)
 
 R2_expfit_T34_L_22
 
@@ -868,3 +939,217 @@ plot(lm_T34_L_22)
 anova(expfit_T34_L_22,lm_T34_L_22)
 AICc(expfit_T34_L_22)
 AICc(lm_T34_L_22)
+
+
+#T34 80
+
+start_T34_L_80 <- list()     # Make an empty list for the starting values
+
+#exponential curve manipulator, use sliders to adjust parameters until the curve fits the data
+manipulate(
+  {
+    plot(T34_L_80$Minutes, T34_L_80$weight_perA)#plot observed data
+    k <- kk; b0 <- b00; b1 <- b10
+    curve(k*exp(-b1*x) + b0, add=TRUE)
+    start_T34_L_80 <<- list(k=k, b0=b0, b1=b1)
+  },
+  kk=slider(-1, 1, step = 0.001,  initial = 0.03),
+  b10=slider(-1, 1, step = 0.001, initial = -.03),
+  b00=slider(-1, 1, step=0.001,initial= 0))
+
+# When the slider box closes start_data() becomes a list of named parameters for use as start values
+
+#print start values:
+start_T34_L_80
+
+# Model fit using the start values:
+expfit_T34_L_80 <- nls(weight_perA ~ I(k*exp(-b1*Minutes) + b0), data= T34_L_80, start = start_T34_L_80, control = list(maxiter = 1000, minFactor = .0000009))
+
+summary(expfit_T34_L_80)
+
+
+
+#roughly check fit using Efron's pseudo R2
+pred <- predict(expfit_T34_L_80)
+n <- length(pred)
+res <- resid(expfit_T34_L_80)
+w <- weights(expfit_T34_L_80)
+if (is.null(w)) w <- rep(1, n)
+rss <- sum(w * res ^ 2)
+resp <- pred + res
+center <- weighted.mean(resp, w)
+r.df <- summary(expfit_T34_L_80)$df[2]
+int.df <- 1
+tss <- sum(w * (resp - center)^2)
+r.sq <- 1 - rss/tss
+adj.r.sq <- 1 - (1 - r.sq) * (n - int.df) / r.df
+R2_expfit_T34_L_80 <- list(pseudo.R.squared = r.sq,
+                           adj.R.squared = adj.r.sq)
+
+R2_expfit_T34_L_80
+
+
+# Plot model output
+plot.new()#call a new plot
+par(mfrow=c(1,1))# Define plotting parameters to add multiple plots try par(mfrow=c(3,2), oma = c(3,3,3,1), mar = c(2,3,1,2))
+
+plotFit(expfit_T34_L_80, interval = 'confidence', data = T34_L_80, xlim = c(0,max(T34_L_80$Minutes)), ylim = c(-10, 1+max(T34_L_80$weight_perA)), cex = 1.25, cex.axis = 1.5, cex.main = 1.4, ylab = '' ,xaxt = 'n', yaxt = 'n',col.fit ='salmon', col.conf = 'orchid', col='blue')
+axis(1, at = c(0,.5*max(T34_L_80$Minutes),max(T34_L_80$Minutes)), cex.axis = 1, labels = TRUE)
+axis(2, at = c(0, 10,20,40,60,80, 100), cex.axis = 1, labels = TRUE)
+mtext(expression(paste('g  ', 'per', '  m^2')), side = 2, cex = 1.1, line = 3)
+mtext(expression('T34 80 L'), side = 3, cex = 1.1, line = 1)
+
+#compare to lm
+lm_T34_L_80 <- lm(weight_perA ~ Minutes, data = T34_L_80)
+
+summary(lm_T34_L_80)
+
+plot(lm_T34_L_80)
+
+anova(expfit_T34_L_80,lm_T34_L_80)
+AICc(expfit_T34_L_80)
+AICc(lm_T34_L_80)
+
+
+#T34 102
+
+start_T34_L_102 <- list()     # Make an empty list for the starting values
+
+#exponential curve manipulator, use sliders to adjust parameters until the curve fits the data
+manipulate(
+  {
+    plot(T34_L_102$Minutes, T34_L_102$weight_perA)#plot observed data
+    k <- kk; b0 <- b00; b1 <- b10
+    curve(k*exp(-b1*x) + b0, add=TRUE)
+    start_T34_L_102 <<- list(k=k, b0=b0, b1=b1)
+  },
+  kk=slider(-1, 1, step = 0.001,  initial = 0.03),
+  b10=slider(-1, 1, step = 0.001, initial = -.03),
+  b00=slider(-1, 1, step=0.001,initial= 0))
+
+# When the slider box closes start_data() becomes a list of named parameters for use as start values
+
+#print start values:
+start_T34_L_102
+
+# Model fit using the start values:
+expfit_T34_L_102 <- nls(weight_perA ~ I(k*exp(-b1*Minutes) + b0), data= T34_L_102, start = start_T34_L_102, control = list(maxiter = 1000, minFactor = .0000009))
+
+summary(expfit_T34_L_102)
+
+
+
+#roughly check fit using Efron's pseudo R2
+pred <- predict(expfit_T34_L_102)
+n <- length(pred)
+res <- resid(expfit_T34_L_102)
+w <- weights(expfit_T34_L_102)
+if (is.null(w)) w <- rep(1, n)
+rss <- sum(w * res ^ 2)
+resp <- pred + res
+center <- weighted.mean(resp, w)
+r.df <- summary(expfit_T34_L_102)$df[2]
+int.df <- 1
+tss <- sum(w * (resp - center)^2)
+r.sq <- 1 - rss/tss
+adj.r.sq <- 1 - (1 - r.sq) * (n - int.df) / r.df
+R2_expfit_T34_L_102 <- list(pseudo.R.squared = r.sq,
+                           adj.R.squared = adj.r.sq)
+
+R2_expfit_T34_L_102
+
+
+# Plot model output
+plot.new()#call a new plot
+par(mfrow=c(1,1))# Define plotting parameters to add multiple plots try par(mfrow=c(3,2), oma = c(3,3,3,1), mar = c(2,3,1,2))
+
+plotFit(expfit_T34_L_102, interval = 'confidence', data = T34_L_102, xlim = c(0,max(T34_L_102$Minutes)), ylim = c(-10, 1+max(T34_L_102$weight_perA)), cex = 1.25, cex.axis = 1.5, cex.main = 1.4, ylab = '' ,xaxt = 'n', yaxt = 'n',col.fit ='salmon', col.conf = 'orchid', col='blue')
+axis(1, at = c(0,.5*max(T34_L_102$Minutes),max(T34_L_102$Minutes)), cex.axis = 1, labels = TRUE)
+axis(2, at = c(0, 10,20,40,60,80, 100), cex.axis = 1, labels = TRUE)
+mtext(expression(paste('g  ', 'per', '  m^2')), side = 2, cex = 1.1, line = 3)
+mtext(expression('T34 102 L'), side = 3, cex = 1.1, line = 1)
+
+#compare to lm
+lm_T34_L_102 <- lm(weight_perA ~ Minutes, data = T34_L_102)
+
+summary(lm_T34_L_102)
+
+plot(lm_T34_L_102)
+
+anova(expfit_T34_L_102,lm_T34_L_102)
+AICc(expfit_T34_L_102)
+AICc(lm_T34_L_102)
+
+
+#####
+
+#T48
+
+#T48 60
+
+start_T48_L_60 <- list()     # Make an empty list for the starting values
+
+#exponential curve manipulator, use sliders to adjust parameters until the curve fits the data
+manipulate(
+  {
+    plot(T48_L_60$Minutes, T48_L_60$weight_perA)#plot observed data
+    k <- kk; b0 <- b00; b1 <- b10
+    curve(k*exp(-b1*x) + b0, add=TRUE)
+    start_T48_L_60 <<- list(k=k, b0=b0, b1=b1)
+  },
+  kk=slider(-1, 1, step = 0.001,  initial = 0.03),
+  b10=slider(-1, 1, step = 0.001, initial = -.03),
+  b00=slider(-1, 1, step=0.001,initial= 0))
+
+# When the slider box closes start_data() becomes a list of named parameters for use as start values
+
+#print start values:
+start_T48_L_60
+
+# Model fit using the start values:
+expfit_T48_L_60 <- nls(weight_perA ~ I(k*exp(-b1*Minutes) + b0), data= T48_L_60, start = start_T48_L_60, control = list(maxiter = 1000, minFactor = .0000009))
+
+summary(expfit_T48_L_60)
+
+
+
+#roughly check fit using Efron's pseudo R2
+pred <- predict(expfit_T48_L_60)
+n <- length(pred)
+res <- resid(expfit_T48_L_60)
+w <- weights(expfit_T48_L_60)
+if (is.null(w)) w <- rep(1, n)
+rss <- sum(w * res ^ 2)
+resp <- pred + res
+center <- weighted.mean(resp, w)
+r.df <- summary(expfit_T48_L_60)$df[2]
+int.df <- 1
+tss <- sum(w * (resp - center)^2)
+r.sq <- 1 - rss/tss
+adj.r.sq <- 1 - (1 - r.sq) * (n - int.df) / r.df
+R2_expfit_T48_L_60 <- list(pseudo.R.squared = r.sq,
+                           adj.R.squared = adj.r.sq)
+
+R2_expfit_T48_L_60
+
+
+# Plot model output
+plot.new()#call a new plot
+par(mfrow=c(1,1))# Define plotting parameters to add multiple plots try par(mfrow=c(3,2), oma = c(3,3,3,1), mar = c(2,3,1,2))
+
+plotFit(expfit_T48_L_60, interval = 'confidence', data = T48_L_60, xlim = c(0,max(T48_L_60$Minutes)), ylim = c(-10, 1+max(T48_L_60$weight_perA)), cex = 1.25, cex.axis = 1.5, cex.main = 1.4, ylab = '' ,xaxt = 'n', yaxt = 'n',col.fit ='salmon', col.conf = 'orchid', col='blue')
+axis(1, at = c(0,.5*max(T48_L_60$Minutes),max(T48_L_60$Minutes)), cex.axis = 1, labels = TRUE)
+axis(2, at = c(0, 10,20,40,60,80, 100), cex.axis = 1, labels = TRUE)
+mtext(expression(paste('g  ', 'per', '  m^2')), side = 2, cex = 1.1, line = 3)
+mtext(expression('T48 60 L'), side = 3, cex = 1.1, line = 1)
+
+#compare to lm
+lm_T48_L_60 <- lm(weight_perA ~ Minutes, data = T48_L_60)
+
+summary(lm_T48_L_60)
+
+plot(lm_T48_L_60)
+
+anova(expfit_T48_L_60,lm_T48_L_60)
+AICc(expfit_T48_L_60)
+AICc(lm_T48_L_60)
