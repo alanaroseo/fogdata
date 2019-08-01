@@ -22,7 +22,7 @@ TT$position <- revalue(TT$position, c("1"="inner", "2"="outer"))
 
 TTp$position <- revalue(TTp$position, c("1"="inner", "2"="outer"))
 
-
+#all data
 #####
 ggplot(data = TT, aes(x = height, y = seconds.open )) +
   geom_point(aes(color=fraction.TT.vol.released, shape = tree), alpha = .7)+
@@ -117,6 +117,8 @@ ggplot(data = TT, aes(x= position, y = seconds.open)) +
 
  #all data
 ######
+#height-paired data
+######
 ggplot(data = TTp, aes(x = height, y = seconds.open )) +
   geom_point(aes(color=fraction.TT.vol.released, shape = tree), alpha = .7)+
   scale_color_viridis()+
@@ -177,7 +179,13 @@ plot.new()
 ggplot(data = TTp, aes(x = vol_rel, y = xy_vol)) +
   geom_point(aes(color=position, size = height, shape=tree), alpha = .7)+
   theme_classic()+
-  geom_abline(size=1, color = "blue")
+  geom_abline(slope=1, intercept=0)
+
+ggplot(data = TTp, aes(x = vol_rel, y = xy_vol)) +
+  geom_point(aes(color=position, size = height, shape=tree), alpha = .7)+
+  theme_classic()+
+  geom_smooth(method=lm, se=FALSE, color = "purple")+
+  facet_wrap(~tree)
 
 ggplot(data = TTp, aes(x = mol_rel.m2, y = ind_pred_gs)) +
   geom_point(aes(color=position, size = height), alpha = .7)+
