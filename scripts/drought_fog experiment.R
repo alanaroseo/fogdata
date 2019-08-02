@@ -2,10 +2,13 @@ TT <- as.data.frame(read.delim("clipboard"))
 
 TTp <- as.data.frame(read.delim("clipboard"))
 
+library(plyr)
 library(tidyverse)
 library(ggplot2)
 library("viridis")
+library(plotly)
 names(TTp)
+names(TT)
 
 TT$gs <- TT$predicted.gs.from.DeWalt.curve..mol.H2O.m.2s.1.
 
@@ -16,11 +19,12 @@ TTp$gs <- TTp$predicted.gs.from.DeWalt.curve..mol.H2O.m.2s.1.
 
 TTp$tree <- as.factor(TTp$tree)
 TTp$position <- as.factor(TTp$position)
+TTp$position <- revalue(TTp$position, c("1"="inner", "2"="outer"))
 
-library(plyr)
+
 TT$position <- revalue(TT$position, c("1"="inner", "2"="outer"))
 
-TTp$position <- revalue(TTp$position, c("1"="inner", "2"="outer"))
+
 
 #all data
 #####
@@ -41,10 +45,12 @@ ggplot(data = TT, aes(x = vol_rel, y = xy_vol)) +
   theme_classic()+
   geom_abline(size=1, color = "blue")
 
-ggplot(data = TT, aes(x = mol_rel.m2, y = gs)) +
-  geom_point(aes(color=position, size = height, shape=tree), alpha = .7)+
+ggplot(data = TTp, aes(x =new_ind_gs , y =mol_rel.m2) ) +
+  geom_point(aes(shape=position, color = height, size = DSF), alpha = .7)+
   theme_classic()+
-  geom_smooth(method=lm, se=FALSE, color = "salmon")
+  geom_smooth(method=lm, se=FALSE, color = "orchid")+
+  scale_color_viridis()+
+  facet_wrap(~tree)
   
 ggplot(data = TT, aes(x = height, y = seconds.open)) +
   geom_point(aes(color=position, size = TT_volume.mm3.), alpha = .7)+
@@ -52,10 +58,11 @@ ggplot(data = TT, aes(x = height, y = seconds.open)) +
   geom_smooth(method=lm, se=FALSE, color = "salmon")
  
 
-ggplot(data = TT, aes(x = gs, y = mol_rel.m2)) +
+ggplot(data = TTp, aes(x = height, y = mol_rel.m2)) +
   geom_point(aes(color=position, size = TT_volume.mm3.), alpha = .7)+
   theme_classic()+
-  geom_smooth(method=lm, se=FALSE, color = "orchid")
+  stat_smooth(method='nls', formula='y~(-c*x^2)+b*x-a', method.args=list(start = 
+                                                                  list(a=1, b=1, c=.001)), se=FALSE)
 
 
 ggplot(data = TT, aes(x= position, y = xy_vol.vol_rel)) +
@@ -119,34 +126,36 @@ ggplot(data = TT, aes(x= position, y = seconds.open)) +
 ######
 #height-paired data
 ######
-ggplot(data = TTp, aes(x = height, y = seconds.open )) +
+ggplot(data = TTp, aes(x = height, y = new5_sec_open )) +
   geom_point(aes(color=fraction.TT.vol.released, shape = tree), alpha = .7)+
   scale_color_viridis()+
   theme_classic()+
   facet_wrap(~position)
 
-ggplot(data = TTp, aes(x = height, y = seconds.open )) +
+ggplot(data = TTp, aes(x = height, y = new5_sec_open)) +
   geom_point(aes(color=position, shape = tree), alpha = .7)+
   geom_smooth(method=lm, se=FALSE, color = "orchid")+
-  theme_classic()
+  theme_classic()+
+  facet_wrap(~tree)
 
-plot.new()
+
 ggplot(data = TTp, aes(x = vol_rel, y = xy_vol)) +
   geom_point(aes(color=position, size = height, shape=tree), alpha = .7)+
   theme_classic()+
   geom_abline(size=1, color = "blue")
 
-ggplot(data = TTp, aes(x = mol_rel.m2, y = gs)) +
+ggplotly(ggplot(data = TTp, aes(x = mol_rel.m2, y = All_gs_nomidstrat)) +
   geom_point(aes(color=position, size = height, shape=tree), alpha = .7)+
   theme_classic()+
-  geom_smooth(method=lm, se=FALSE, color = "salmon")
+  geom_smooth(method=lm, se=FALSE, color = "salmon"))
 
-ggplot(data = TTp, aes(x = height, y = seconds.open)) +
-  geom_point(aes(color=position, size = TT_volume.mm3.), alpha = .7)+
+ ggplot(data = TTp, aes(x = height, y = seconds.open) )+
+  geom_point(aes(color=position, size = TT_volume.mm3., shape=tree), alpha = .7)+
   theme_classic()+
   geom_smooth(method=lm, se=FALSE, color = "salmon")
 
 
+  
 ggplot(data = TTp, aes(x = gs, y = mol_rel.m2)) +
   geom_point(aes(color=position, size = TT_volume.mm3.), alpha = .7)+
   theme_classic()+
@@ -165,10 +174,11 @@ ggplot(data = TTp, aes(x= position, y = ind_sec_open)) +
 
 
 ggplot(data = TTp, aes(x = height, y = ind_sec_open )) +
-  geom_point(aes(color=fraction.TT.vol.released, shape = tree), alpha = .7)+
+  geom_point(aes(color=fraction.TT.vol.released, shape = position), alpha = .7)+
   scale_color_viridis()+
   theme_classic()+
-  facet_wrap(~position)
+  geom_smooth(method=lm, se=FALSE, color = "orchid")+
+  facet_wrap(~tree)
 
 ggplot(data = TTp, aes(x = height, y = ind_sec_open )) +
   geom_point(aes(color=position, shape = tree), alpha = .7)+
