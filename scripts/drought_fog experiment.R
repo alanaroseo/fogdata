@@ -58,12 +58,18 @@ ggplot(data = TT, aes(x = height, y = seconds.open)) +
   geom_smooth(method=lm, se=FALSE, color = "salmon")
  
 
-ggplot(data = TTp, aes(x = height, y = mol_rel.m2)) +
+ggplot(data = TT, aes(x = height, y = mol_rel.m2)) +
   geom_point(aes(color=position, size = TT_volume.mm3.), alpha = .7)+
   theme_classic()+
   stat_smooth(method='nls', formula='y~(-c*x^2)+b*x-a', method.args=list(start = 
                                                                   list(a=1, b=1, c=.001)), se=FALSE)
 
+ggplot(data = TT, aes(x = TTv_per_m2, y = new_ind_gs)) +
+  geom_point(aes(color=position, size = TT_volume.mm3.), alpha = .7)+
+  theme_classic()+
+  stat_smooth(method='nls', formula='y~(-c*x^2)+b*x-a', method.args=list(start = 
+                                                                           list(a=1, b=1, c=.001)), se=FALSE)
+ 
 
 ggplot(data = TT, aes(x= position, y = xy_vol.vol_rel)) +
   geom_boxplot(aes(color=position))+
