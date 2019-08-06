@@ -67,6 +67,9 @@ AICc(lmm5)
 anova(lmm2,lmm5)
 
 #######
+#mol released per m2
+
+
 mod3 <- lm(mol_rel.m2 ~ ind_pred_gs, TTp)
 summary(mod3)
 AICc(mod3)
@@ -144,3 +147,35 @@ lmm15 <- lmer(ind_sec_open ~ height+(1|tree:position), TTp)
 AICc(lmm15)
 summary(lmm15)$sigma^2
 summary(lmm15)$varcor$tree[1]
+
+##################
+#volume released per xylem volume
+mod10 <- lm(vol_rel_per_xy_vol ~ height, TTp)
+summary(mod10)
+AICc(mod10)
+summary(mod10)$sigma^2
+
+lmm16 <- lmer(vol_rel_per_xy_vol ~ height+(1|tree:position), TTp)#nice
+summary(lmm16)
+AICc(lmm16)
+summary(lmm16)$sigma^2
+summary(lmm16)$varcor$tree[1]
+
+
+lmm17 <- lmer(vol_rel_per_xy_vol ~ height+(1|tree), TTp)#better
+summary(lmm17)
+AICc(lmm17)
+summary(lmm17)$sigma^2
+summary(lmm17)$varcor$tree[1]
+
+##################
+mod11 <- lm(vol_rel_per_xy_vol ~ tree, TTp)#best model is tree alone, effect of height is small
+summary(mod11)
+AICc(mod11)
+summary(mod11)$sigma^2
+###############
+
+mod12 <- lm(vol_rel_per_xy_vol ~ tree+height, TTp)
+summary(mod12)
+AICc(mod12)
+summary(mod12)$sigma^2
