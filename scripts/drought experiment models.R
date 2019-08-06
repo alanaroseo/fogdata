@@ -10,6 +10,18 @@ library(lme4)
 library(lmerTest)
 library(lattice)
 
+#coefficients(mod) # model coefficients
+#confint(mod, level=0.95) # CIs for model parameters
+#modted(mod) # predicted values
+#residuals(mod) # residuals
+#anova(mod) # anova table
+#vcov(mod) # covariance matrix for model parameters
+#influence(mod) # regression diagnostics 
+
+# K-fold cross-validation:
+library(DAAG)
+#cv.lm(df=mydata, mod, m=3) # 3 fold cross-validation
+
 #####
 #TTv_per_m2
 
@@ -48,6 +60,7 @@ summary(lmm9)$sigma^2
 summary(lmm9)$varcor$position[1]
 #####################################################################
 
+cv.lm(data=TTp, mod3, m=4)
 anova(lmm9,lmm2)
 
 lmm10 <- lmer(TTv_per_m2 ~ height+(1|position), TTp)
@@ -60,7 +73,7 @@ AICc(lmm6)
 
 anova(lmm2,lmm6)
 
-lmm5 <- lmer(TTv_per_m2 ~ ind_pred_gs+(1|tree:position), TTp)
+lmm5 <- lmer(TTv_per_m2 ~ ind_pred_gs+height+(1|position), TTp)
 summary(lmm5)
 AICc(lmm5)
 
@@ -162,7 +175,7 @@ summary(lmm16)$sigma^2
 summary(lmm16)$varcor$tree[1]
 
 
-lmm17 <- lmer(vol_rel_per_xy_vol ~ height+(1|tree), TTp)#better
+lmm17 <- lmer(vol_rel_per_xy_vol ~ height+(0+height|tree), TTp)#better
 summary(lmm17)
 AICc(lmm17)
 summary(lmm17)$sigma^2
@@ -175,7 +188,38 @@ AICc(mod11)
 summary(mod11)$sigma^2
 ###############
 
-mod12 <- lm(vol_rel_per_xy_vol ~ tree+height, TTp)
+mod12 <- lm(vol_rel_per_xy_vol ~ tree+(1|position), TTp)#very close 
 summary(mod12)
 AICc(mod12)
 summary(mod12)$sigma^2
+
+
+####################################################
+#vol_rel
+
+mod13 <- lm(vol_rel ~ xy_vol , TTp)#positive relationship to xy_vol, xy_vol is better related to height, but not by much
+summary(mod13)
+AICc(mod13)
+summary(mod13)$sigma^2
+
+mod14 <- lm(vol_rel ~ height , TTp)#better (negative) relationship to height
+summary(mod14)
+AICc(mod14)
+summary(mod14)$sigma^2
+
+###################################################################
+mod15 <- lm(vol_rel ~ xy_vol+height , TTp)#best
+summary(mod15)
+AICc(mod15)
+summary(mod15)$sigma^2
+###################################################################
+
+mod14 <- lm(xy_vol ~ height , TTp)#better (negative) relationship to height
+summary(mod14)
+AICc(mod14)
+summary(mod14)$sigma^2
+
+lmm18 <- lmer(vol_rel ~ xy_vol +height+(1|tree), TTp)#positive relationship to xy_vol, xy_vol is better related to height, but not by much
+summary(lmm18)
+AICc(lmm18)
+summary(lmm18)$sigma^2
