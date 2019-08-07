@@ -107,12 +107,27 @@ summary(lmm4)$sigma^2
 summary(lmm4)$varcor$tree[1]
 
 #############################################################################
-lmm7 <- lmer(mol_rel.m2 ~ ind_pred_gs+(1|tree:position), TTp)#even better with paired dataset (varying intercepts only) top model for mol_rel.m2
+lmm7 <- lmer(mol_rel.m2 ~ ind_pred_gs+(1|tree:position), TTp)#even better with paired dataset (varying intercepts only) top model for mol_rel.m2 with linear fit
 summary(lmm7)
 AICc(lmm7)
 summary(lmm7)$sigma^2#residual variance should be low
 summary(lmm7)$varcor$tree[1]#how var much is explained by tree
 ############################################################################
+#y~(-c*x^2)+b*x-a polynominal curve
+polymod1 <- nls((mol_rel.m2 ~ I((-c*height^2))+(b*height)-a),start = #this is the very best model for mol_rel.m2 based on AICc with either data set but best with full
+  list(a=1, b=1, c=.001), TT)
+summary(polymod1)
+AICc(polymod1)
+summary(polymod1)$sigma^2
+summary(polymod1)$varcor$position[1]
+##########################################################################################
+polymod2 <- nls((mol_rel.m2 ~ I((-c*ind_pred_gs^2))+(b*ind_pred_gs)-a),start = #this is also quite good, but not as good
+                  list(a=1, b=1, c=.001), TT)
+summary(polymod2)
+AICc(polymod2)
+summary(polymod2)$sigma^2
+summary(polymod2)$varcor$position[1]
+
 
 lmm10 <- lmer(mol_rel.m2 ~ ind_pred_gs+(1+tree|position), TTp)#more likely but higher AIC
 summary(lmm10)
