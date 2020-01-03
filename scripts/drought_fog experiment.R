@@ -32,22 +32,39 @@ TT$position <- revalue(TT$position, c("1"="inner", "2"="outer"))
 
 ggplot(data = TT, aes(x = height, y = ind.seconds.open)) +
   geom_point(aes(color=position, shape = tree), alpha = .7)+
+  geom_smooth(method=lm, se=FALSE, aes(color = position))+
+  theme_classic()+
+  facet_wrap(~tree)
+
+ggplot(data = TT, aes(x = TSF, y = ind.seconds.open)) +
+  geom_point(aes(color=position, shape = tree), alpha = .7)+
+  geom_smooth(method=lm, se=FALSE, aes(color = position))+
+  theme_classic()+
+  facet_wrap(~tree)
+
+ggplot(data = TT, aes(x = d13C, y = ind.seconds.open)) +
+  geom_point(aes(color=position, shape = tree), alpha = .7)+
+  geom_smooth(method=lm, se=FALSE, aes(color = position))+
+  theme_classic()+
+  facet_wrap(~tree)
+
+ggplot(data = TT, aes(x = height, y = ind.seconds.open)) +
+  geom_point(aes(color=position, shape = tree), alpha = .7)+
   geom_smooth(method=lm, se=FALSE, color = "orchid")+
   theme_classic()+
   facet_wrap(~tree)
 
 ggplot(data = TT, aes(x = TSF, y = ind.seconds.open)) +
   geom_point(aes(color=position, shape = tree), alpha = .7)+
-  geom_smooth(method=lm, se=FALSE, color = "orchid")+
+  geom_smooth(method=lm, se=FALSE)+
   theme_classic()+
   facet_wrap(~tree)
 
 ggplot(data = TT, aes(x = d13C, y = ind.seconds.open)) +
   geom_point(aes(color=position, shape = tree), alpha = .7)+
-  geom_smooth(method=lm, se=FALSE, color = "orchid")+
+  geom_smooth(method=lm, se=FALSE)+
   theme_classic()+
   facet_wrap(~tree)
-
 
 ggplot(data = TT, aes(x = height, y = ind.seconds.open)) +
   geom_point(aes(color=tree, shape = position), alpha = .7, size = 3)+
