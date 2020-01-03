@@ -51,7 +51,7 @@ ggplot(data = TT, aes(x = d13C, y = ind.seconds.open)) +
 
 ggplot(data = TT, aes(x = height, y = ind.seconds.open)) +
   geom_point(aes(color=tree, shape = position), alpha = .7, size = 3)+
-  geom_smooth(method=lm, se=FALSE, color = "orchid")+
+  geom_smooth(method=lm, se=FALSE, aes(color = position))+
   theme_classic()
 
 ggplot(data = TT, aes(x = TSF, y = ind.seconds.open )) +
@@ -85,7 +85,7 @@ ggplot(data = TTp, aes(x = TSF, y = ind.seconds.open)) +
 
 ggplot(data = TTp, aes(x = d13C, y = ind.seconds.open)) +
   geom_point(aes(color=position, shape = tree), alpha = .7)+
-  geom_smooth(method=lm, se=FALSE, color = "orchid")+
+  geom_smooth(method=lm, se=FALSE, aes(color = position))+
   theme_classic()+
   facet_wrap(~tree)
 
@@ -102,7 +102,7 @@ ggplot(data = TTp, aes(x = TSF, y = ind.seconds.open )) +
 
 ggplot(data = TTp, aes(x = d13C, y = ind.seconds.open )) +
   geom_point(aes(color=position, shape = tree), alpha = .7)+
-  geom_smooth(method=lm, se=FALSE, color = "orchid")+
+  geom_smooth(method=lm, se=FALSE, aes(color = position))+
   theme_classic()
 
 
