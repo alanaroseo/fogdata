@@ -23,25 +23,58 @@ library(tidyverse)
 
 ##### Generate Full range of VPD data #####
 
+#all
 VPD <-  seq(.5,1.5,length=45)#could use by= instead of length= to specify increment
 
 ##### Generate Full range of gs data #####
+#treetop
+gs_t <-  seq(.05,.1,length=length(VPD))# the same length as the VPD vector
+#midcrown
+gs_m <-  seq(.04,.08,length=length(VPD))
+#bottom
+gs_b <-  seq(.03,.06,length=length(VPD))
 
-gs <-  seq(.03,.06,length=length(VPD))# the same length as the VPD vector
+
 #mean treetop max gs:0.1, mid:0.08, lower:0.06
 
 
 ####### calculate seconds of transpiration sustained
 
-V_released=0.19 #constant representing mean volume released during TT collapse (mol*m^-2):
+#treetop
+V_released_t=0.06 #constant representing mean volume released during TT collapse (mol*m^-2):
+#midcrown
+V_released_m=0.27 
+#bottom
+V_released_b=0.19
+
 #very highest 5 sampes: 0.06, all above 100:0.13, 70-82m: 0.27, lowest 6 samples (to catch bottom of crown for all trees):0.19.
 
-grid <- function(gs, VPD){
-  V_released/(gs*(VPD/99.6))#transpiration (mol*m^-2*second^-1)
+#####
+######Make a function and calculate a z matrix
+
+#treetop
+E_t <- function(gs_t, VPD){
+  V_released_t/(gs_t*(VPD/99.6))#transpiration (mol*m^-2*second^-1)
 }#the function "grid" is calculates the # of seconds of transpiration suatainable 
-seconds <- outer(gs,VPD,grid)#outer() function applies the function "grid" at every combination of gs and VPD. Seconds is the z axis (a matrix)
-rownames(seconds) = gs
-colnames(seconds) = VPD
+seconds_t <- outer(gs_t,VPD,E_t)#outer() function applies the function "grid" at every combination of gs and VPD. Seconds is the z axis (a matrix)
+rownames(seconds_t) = gs_t
+colnames(seconds_t) = VPD
+
+#midcrown
+E_m <- function(gs_m, VPD){
+  V_released_m/(gs_m*(VPD/99.6))#transpiration (mol*m^-2*second^-1)
+}#the function "grid" is calculates the # of seconds of transpiration suatainable 
+seconds_m <- outer(gs_m,VPD,E_m)#outer() function applies the function "grid" at every combination of gs and VPD. Seconds is the z axis (a matrix)
+rownames(seconds_m) = gs_m
+colnames(seconds_m) = VPD
+
+#treetop
+E_b <- function(gs_b, VPD){
+  V_released_b/(gs_b*(VPD/99.6))#transpiration (mol*m^-2*second^-1)
+}#the function "grid" is calculates the # of seconds of transpiration suatainable 
+seconds_b <- outer(gs_b,VPD,E_b)#outer() function applies the function "grid" at every combination of gs and VPD. Seconds is the z axis (a matrix)
+rownames(seconds_b) = gs_b
+colnames(seconds_b) = VPD
 
 ######
 #the 3D plots
@@ -65,7 +98,7 @@ persp3D(gs,VPD,seconds,theta=140, phi=25,xlab = "gs",ylab = "VPD increase", zlab
 #2D plots
 
 gg <- as.data.frame(c(gs,VPD))
-gg$seconds <- with(gg,grid(gs,VPD))      # need long format for ggplot
+gg$seconds <- with(gg,E_t(gs,VPD))      # need long format for ggplot
 library(ggplot2)
 library(RColorBrewer)               #for brewer.pal()
 brks <- cut(gg$seconds,breaks=seq(0,100,len=6))
@@ -245,7 +278,7 @@ plot.new()
 
 #I am organizing where the plots appear on the page using the "plt" argument in "par()"
 par(new = "TRUE",              
-    plt = c(0.1,0.4,0.60,0.95),   # using plt instead of mfcol (compare
+    plt = c(0.1,0.6,0.60,0.95),   # using plt instead of mfcol (compare
     # coordinates in other plots)
     las = 1,                      # orientation of axis labels
     cex.axis = 1,                 # size of axis annotation
@@ -254,26 +287,25 @@ par(new = "TRUE",
 #Top left plot:
 #
 # the filled contour - coloured areas
-filled.contour3(gs,
+filled.contour3(gs_t,
                 VPD,
-                seconds,
-                color=terrain.colors,
+                seconds_t,
+                color=plasma,
                 xlab = "",        # suppress x-axis annotation
                 ylab = "",        # suppress y-axis annotation
-                xlim = c(min(gs),max(gs)),
+                xlim = c(min(gs_t),max(gs_t)),
                 ylim = c(min(VPD),max(VPD)),
-                zlim = c(min(seconds),max(seconds))
+                zlim = c(min(seconds_t),max(seconds_m))
 )
 # the contour part - draw iso-lines
-contour(gs,
+contour(gs_t,
         VPD,
-        seconds,
-        color=terrain.colors,
-        xlab = "",
-        ylab = "",
-        xlim = c(min(gs),max(gs)),
+        seconds_t,
+        xlab = "",        # suppress x-axis annotation
+        ylab = "",        # suppress y-axis annotation
+        xlim = c(min(gs_t),max(gs_t)),
         ylim = c(min(VPD),max(VPD)),
-        zlim = c(min(seconds),max(seconds)),
+        zlim = c(min(seconds_t),max(seconds_m)),
         add=TRUE,                 # add the contour plot to filled-contour,
         #thus making an overlay
         col = grey(0.4)           # color of overlay-lines
@@ -282,40 +314,40 @@ contour(gs,
 # An annotation inside first plot
 #The xpd=NA allows for writing outside the plot limits, but still using the the x and y axes to place the text
 par(xpd = NA)
-text(x=11,y=1.5,"x",cex = 1.5,font = 2)
-MakeLetter( "(a)")
+text(x=11,y=1.5,"x",cex = 1.5,font = 1)
+MakeLetter( "treetop")
 
 ######################################################################
 #
 #
-plot.new()
+
 #Top right plot:
 par(new = "TRUE",
-    plt = c(0.5,0.8,0.60,0.95),  # defining window for second plot
+    plt = c(0.1,0.6,0.15,0.5),  # defining window for second plot
     las = 1,
     cex.axis = 1)
 #
 filled.contour3(
-  gs,
+  gs_m,
   VPD,
-  seconds,
-  color=heat.colors,
+  seconds_m,
+  color=plasma,
   xlab = "",
   ylab = "",
-  xlim = c(min(gs),max(gs)),
+  xlim = c(min(gs_m),max(gs_m)),
   ylim = c(min(VPD),max(VPD)),
-  zlim = c(min(seconds),max(seconds))
+  zlim = c(min(seconds_t),max(seconds_m))
 )
 #
 contour(
-  gs,
+  gs_m,
   VPD,
-  seconds,
+  seconds_m,
   xlab = "",
   ylab = "",
-  xlim = c(min(gs),max(gs)),
+  xlim = c(min(gs_m),max(gs_m)),
   ylim = c(min(VPD),max(VPD)),
-  zlim = c(min(seconds),max(seconds)),
+  zlim = c(min(seconds_t),max(seconds_m)),
   add=TRUE
 )
 #
@@ -324,13 +356,9 @@ contour(
 #filled.contour3(gs,VPD,seconds,color=heat.colors,xlab = "",ylab = "",xlim = c(min(gs),max(gs)),ylim = c(min(VPD),max(VPD)),zlim = c(min(seconds),max(seconds)))
 #
 # Add annotation
-text(x=11,
-     y=1.5,
-     "x",
-     cex = 1.5,
-     font = 2)
-
-print.letter(text = "(b)")
+par(xpd = NA)
+text(x=11,y=1.5,"x",cex = 1.5,font = 1)
+MakeLetter( "midcrown")
 
 ######################################################################
 #
@@ -340,35 +368,30 @@ par(new = "TRUE",
     las = 1,
     cex.axis = 1)
 #
-filled.contour3(gs,
+filled.contour3(gs_b,
                 VPD,
-                seconds,
-                col=colorpanel(11, "white", "grey10"),
+                seconds_b,
+                color=plasma,
                 nlevels=11,
                 xlab = "",
                 ylab = "",
-                xlim = c(min(gs),max(gs)),
+                xlim = c(min(gs_b),max(gs_b)),
                 ylim = c(min(VPD),max(VPD)),
-                zlim = c(-1,1))
+                zlim = c(min(seconds_t),max(seconds_m)))
 #
-contour(gs,
+contour(gs_b,
         VPD,
-        seconds,
+        seconds_b,
         xlab = "",
         ylab = "",
-        xlim = c(min(gs),max(gs)),
+        xlim = c(min(gs_b),max(gs_b)),
         ylim = c(min(VPD),max(VPD)),
-        zlim = c(-1,1),
+        zlim = c(min(seconds_t),max(seconds_m)),
         add = TRUE)
 #
-text(x=11,
-     y=1.5,
-     "x",
-     cex = 1.5,
-     font = 2,
-     col = "white")
-
-print.letter(text = "(c)",printcolor = "blue")
+par(xpd = NA)
+text(x=11,y=1.5,"x",cex = 1.5,font = 1)
+MakeLetter( "bottom")
 
 ######################################################################
 #
@@ -417,15 +440,15 @@ par(new = "TRUE",
     cex.axis = 1)
 #
 filled.legend(
-  gs,
+  gs_t,
   VPD,
-  seconds,
-  color = terrain.colors,
+  seconds_m,
+  color = plasma,
   xlab = "",
   ylab = "",
-  xlim = c(min(gs),max(gs)),
+  xlim = c(min(gs_b),max(gs_t)),
   ylim = c(min(VPD),max(VPD)),
-  zlim = c(min(seconds),max(seconds)))
+  zlim = c(min(seconds_t),max(seconds_m)))
 
 #Add some figure labels
 par(xpd=NA,cex = 1.3)
