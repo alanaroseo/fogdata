@@ -16,7 +16,7 @@ library(gridExtra)
 library(grid)
 library(investr)
 library(lattice)
-library(plot3D)
+library(RColorBrewer)
 library(rgl)
 library(viridis)
 library(tidyverse)
@@ -24,15 +24,15 @@ library(tidyverse)
 ##### Generate Full range of VPD data #####
 
 #all
-VPD <-  seq(.5,1.5,length=45)#could use by= instead of length= to specify increment
+VPD <-  seq(.5,1.5,length=100)#could use by= instead of length= to specify increment
 
 ##### Generate Full range of gs data #####
 #treetop
-gs_t <-  seq(.01,.1,length=length(VPD))# the same length as the VPD vector
+gs_t <-  seq(.01,.15,length=length(VPD))# the same length as the VPD vector
 #midcrown
-gs_m <-  seq(.01,.1,length=length(VPD))
+gs_m <-  seq(.01,.15,length=length(VPD))
 #bottom
-gs_b <-  seq(.01,.1,length=length(VPD))
+gs_b <-  seq(.01,.15,length=length(VPD))
 
 
 #mean treetop max gs:0.1, mid:0.08, lower:0.06
@@ -273,49 +273,55 @@ filled.legend <-
 #}
 
 #####
+## An annotation inside plot:
+#The xpd=NA allows for writing outside the plot limits, but still using the the x and y axes to place the text
+#par()
+#text(x=31,y=1.5,"x",cex = 1.5,font = 1)
+#MakeLetter( "(a)")
+
 #The plots
 
 plot.new()
 
 #I am organizing where the plots appear on the page using the "plt" argument in "par()"
 par(new = "TRUE",              
-    plt = c(0.1,0.50,0.7,0.95),   # using plt instead of mfcol (compare coordinates in other plots)
+    plt = c(0.2,0.60,0.7,0.95),   # using plt instead of mfcol (compare coordinates in other plots)
     las = 1,                      # orientation of axis labels
-    cex.axis = 1,                 # size of axis annotation
-    tck = -0.02 )                 # major tick size and direction, < 0 means outside
+    cex.axis = 5,                 # size of axis annotation
+    tck = -0.02,
+    mgp = c(3, 4, 0))                 # major tick size and direction, < 0 means outside
 
 #Top plot:
 #
-# the filled contour - coloured areas
+# the filled contour - colored areas
 filled.contour3(gs_t,
                 VPD,
                 seconds_t,
-                col=plasma(27,direction = -1),
+                nlevels=40,
+                col=viridis(25,direction = -1),
                 xlab = "",        # suppress x-axis annotation
                 ylab = "",        # suppress y-axis annotation
                 xlim = c(min(gs_t),max(gs_t)),
                 ylim = c(min(VPD),max(VPD)),
-                zlim = c(min(seconds_t),max(seconds_m))
+                zlim = c(min(seconds_t),max(2500))
 )
 # the contour part - draw iso-lines
 contour(gs_t,
         VPD,
         seconds_t,
+        nlevels=40,
+        lwd =6, 
+        labcex=5,
         xlab = "",        # suppress x-axis annotation
         ylab = "",        # suppress y-axis annotation
         xlim = c(min(gs_t),max(gs_t)),
         ylim = c(min(VPD),max(VPD)),
         zlim = c(min(seconds_t),max(seconds_m)),
-        add=TRUE,                 # add the contour plot to filled-contour,
+        add=TRUE                 # add the contour plot to filled-contour,
         #thus making an overlay
-        col = grey(0.4)           # color of overlay-lines
+        # color of overlay-lines
 )
 #
-# An annotation inside first plot
-#The xpd=NA allows for writing outside the plot limits, but still using the the x and y axes to place the text
-par(xpd = NA)
-text(x=11,y=1.5,"x",cex = 1.5,font = .5)
-MakeLetter( "treetop")
 
 ######################################################################
 #
@@ -323,26 +329,29 @@ MakeLetter( "treetop")
 
 #middle plot:
 par(new = "TRUE",
-    plt = c(0.1,0.5,0.38,0.63),  # defining window for second plot
+    plt = c(0.2,0.6,0.38,0.63),  # defining window for second plot
     las = 1,
-    cex.axis = 1)
+    cex.axis = 5)
 #
 filled.contour3(
   gs_m,
   VPD,
   seconds_m,
-  col=plasma(27,direction = -1),
+  col=viridis(25,direction = -1),
   xlab = "",
   ylab = "",
   xlim = c(min(gs_m),max(gs_m)),
   ylim = c(min(VPD),max(VPD)),
-  zlim = c(min(seconds_t),max(seconds_m))
+  zlim = c(min(seconds_t),max(2500))
 )
 #
 contour(
   gs_m,
   VPD,
   seconds_m,
+  nlevels=10,
+  lwd =6, 
+  labcex=5,
   xlab = "",
   ylab = "",
   xlim = c(min(gs_m),max(gs_m)),
@@ -350,39 +359,35 @@ contour(
   zlim = c(min(seconds_t),max(seconds_m)),
   add=TRUE
 )
-#
-#Alternatively, you could set z axis limits to depend
-#on the min and max values in seconds.
-#filled.contour3(gs,VPD,seconds,color=heat.colors,xlab = "",ylab = "",xlim = c(min(gs),max(gs)),ylim = c(min(VPD),max(VPD)),zlim = c(min(seconds),max(seconds)))
-#
-# Add annotation
-par(xpd = NA)
-text(x=11,y=1.5,"x",cex = 1.5,font = 1)
-MakeLetter( "midcrown")
+
+
 
 ######################################################################
 #
 #Bottom plot:
 par(new = "TRUE",
-    plt = c(0.1,0.5,0.05,0.3),
+    plt = c(0.2,0.6,0.05,0.3),
     las = 1,
-    cex.axis = 1)
+    cex.axis = 5)
 #
 filled.contour3(
   gs_b,
   VPD,
   seconds_b,
-  col=plasma(27,direction = -1),
+  col=viridis(25,direction = -1),
   xlab = "",
   ylab = "",
   xlim = c(min(gs_b),max(gs_b)),
   ylim = c(min(VPD),max(VPD)),
-  zlim = c(min(seconds_t),max(seconds_m))
+  zlim = c(min(seconds_t),max(2500))
 )
 #
 contour(gs_b,
         VPD,
         seconds_b,
+        nlevels=20,
+        lwd =6, 
+        labcex=5,
         xlab = "",
         ylab = "",
         xlim = c(min(gs_b),max(gs_b)),
@@ -390,33 +395,39 @@ contour(gs_b,
         zlim = c(min(seconds_t),max(seconds_m)),
         add = TRUE)
 #
-par(xpd = NA)
-text(x=11,y=1.5,"x",cex = 1.5,font = 1)
-MakeLetter( "bottom")
 
 ######################################################################
 #Add a legend:
 par(new = "TRUE",
-    plt = c(0.60,0.65,0.15,0.85),   # define plot region for legend
+    plt = c(0.70,0.75,0.15,0.85),   # define plot region for legend
     las = 1,
-    cex.axis = 1)
+    cex.axis = 5)
 #
 filled.legend(
   gs_t,
   VPD,
   seconds_m,
-  col=plasma(27,direction = -1),
+  col=viridis(25,direction = -1),
   xlab = "",
   ylab = "",
   xlim = c(min(gs_b),max(gs_t)),
   ylim = c(min(VPD),max(VPD)),
-  zlim = c(min(seconds_t),max(seconds_m)))
+  zlim = c(min(seconds_t),max(2500)))
 
 #lable it
 par(xpd = NA)
 text(x=11,y=1.5,"x",cex = 1.5,font = .5)
 MakeLetter2( "Seconds
-               
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
              ")
 
 
@@ -427,17 +438,22 @@ dev.off()
 
 #Add some figure labels
 par(xpd=NA,cex = 1.3)
-text(x = -16.7,y = 0,"gs",srt = 90,cex = 1.3)
-text(x = -8,y = -1.62,expression(paste(italic(Delta),"VPD",sep = "")),cex = 1.3)
+text(x = -7,y = 0,"gs",cex = 1.3)
+text(x = -10,y =2,srt = 90,expression(paste(italic(Delta),"VPD",sep = "")),cex = 1.3)
 
 
 
 #####
-MakeLetter <- function(a, where="topleft", cex=1)
+MakeLetter <- function(a, where="left", cex=4)
   legend(where, pt.cex=0, bty="n", title=a, cex=cex, legend=NA)
 
-MakeLetter2 <- function(a, where="top", cex=1)
+
+
+MakeLetter2 <- function(a, where="top", cex=5)
   legend(where, pt.cex=0, bty="n", title=a, cex=cex, legend=NA)
+
+MakeLetter3 <- function(a, where="topright", cex=1)
+  legend(where, pt.cex=-20, bty="n", title=a, cex=cex, legend=NA)
 
 #####
 #save as jpeg
