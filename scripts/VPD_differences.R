@@ -13,62 +13,87 @@ names(squish)
 library(ggplot2)
 library(ggsci)
 ##########
+squish$height <- as.factor(squish$height)
 
 S <- ggplot(data = squish, aes(x = condition, y = Transfusion.Tissue.Area..mm2.)) + #####use this one squish#####
-geom_boxplot(aes(fill=condition),alpha = .7,show.legend = FALSE, size = 1.5)+
-  labs(y = expression(paste("Transfusion", " ", "Tissue", " " , "Area", " " ,paste((mm^2),")", sep = "")), size=10),
+geom_point(aes(color=condition, shape = height) ,  stroke = 8,alpha = .75,show.legend = FALSE, size =15) +
+  labs(y = "",
        x = "") +
-  scale_fill_manual(values = c( "seagreen", "mediumaquamarine","darkgreen"))+
+  scale_fill_manual(values = c( "yellow3","seagreen4", "midnightblue"))+
+  scale_color_manual(values = c( "yellow3","seagreen4", "midnightblue"))+
+  scale_shape_manual(values = c(0:2,5))+
   theme_classic( base_size = 30)
 
-S <- S+geom_point(color="purple4", alpha=.75, size=6)
-  
   
 S <- S + xlim("Hydrated","Droughted","Fog exposed")
-S+theme(axis.text.x = element_text(color="black"),
-         axis.text.y = element_text( color="black"))
 
-ph = 4
-pw = 14
+S <- S + ylim(0,0.015)
+
+S+theme(axis.text.y = element_text(color="black"),
+        axis.text.x = element_text(color="black"),
+        axis.line.y = element_line(color="black",size = 1.52),
+        axis.line.x = element_line(color="black",size = 1.52),
+        axis.ticks.y = element_line(color="black", size =1),
+        axis.ticks.x = element_line(color="black", size =1))
+
+
+ph = 5
+pw = 13
 ggsave("squish.tiff", height=ph, width=pw)
+######without axes:
+
+S+theme(axis.text.y = element_text(color="black"),
+        axis.text.x = element_blank(),
+        axis.line.y = element_line(color="black",size = 1.52),
+        axis.line.x = element_blank(),
+        axis.ticks.y = element_line(color="black", size =1),
+        axis.ticks.x = element_blank())
 
 #############
 
-V <- ggplot(data = dots, aes(x = position, y = max.VPD.diff)) + #####use this one VPD#####
-geom_boxplot(aes(fill=position),alpha = .7,show.legend = FALSE, size = 1.5)+
-  labs(y = expression(paste("Maximum" ,"  ", italic(Delta),"VPD","  ", "(kPa)", sep = ""), size=10),
+V <- ggplot(data = Vdiff, aes(x = Height, y = max.VPD.diff)) + #####use this one VPD#####
+geom_jitter(aes( color =Height), alpha = .7,show.legend = FALSE, size = 10, shape = 17)+
+  labs(y = "",
        x = "") +
-  scale_fill_manual(values = c("mediumaquamarine" ,"seagreen","darkgreen" ))+
-  theme_classic( base_size = 30 )+
+  scale_color_gradient(Vdiff, low =  "greenyellow", high = "darkgreen")+
+  theme_classic(base_size = 30)+
   coord_flip()
 
-V<- V+geom_point(color="purple4", alpha=.75, size=6)
-V+theme(axis.text.x = element_text( color="black"),
-        axis.text.y = element_text( color="black"))
+V <- V+scale_y_discrete(limits=seq(0,2))
+
+
+V+theme(axis.text.y = element_blank( ),
+             axis.text.x = element_text(color="black"),
+             axis.line.y = element_blank( ),
+             axis.line.x = element_line(color="black",size = 1.52),
+             axis.ticks.y = element_blank( ),
+             axis.ticks.x = element_line(color="black", size =1))
 
 ph = 14
-pw = 5.5
+pw = 4.5
 ggsave("VPDplot.tiff", height=ph, width=pw)
 
 ######
- 
+
   
-  
-G <- ggplot(data = Gs, aes(x = position, y = gs)) + #####use this one gs#####
-geom_boxplot(aes(fill=position),alpha = .7,show.legend = FALSE, size =1.5)+
-  labs(y = expression(paste(paste(g[Smax])," ", 
-                            "(mol ",paste(m^-2 )," ",  paste( sec^-1),")" ), size=10),
+G <- ggplot(data = Gs, aes(x = height, y = max.gs)) + #####use this one gs#####
+geom_jitter(aes( color =height), alpha = .7,show.legend = FALSE, size = 10, shape = 17)+
+  labs(y = "",
        x = "") +
-  scale_fill_manual(values = c("mediumaquamarine" ,"seagreen","darkgreen" ))+
-  theme_classic( base_size = 30 )+
+  scale_color_gradient(Vdiff, low =  "greenyellow", high = "darkgreen")+
+  theme_classic(base_size = 30)+
   coord_flip()
 
-G <- G+geom_point(color="purple4", alpha=.75, size=6)
-G+theme(axis.text.x = element_text( color="black"),
-        axis.text.y = element_text(color="black"))
+
+G+theme(axis.text.y = element_blank( ),
+        axis.text.x = element_text(color="black"),
+        axis.line.y = element_blank( ),
+        axis.line.x = element_line(color="black",size = 1.52),
+        axis.ticks.y = element_blank( ),
+        axis.ticks.x = element_line(color="black", size =1))
 
 ph = 14
-pw = 5
+pw = 4.5
 ggsave("gsplot.tiff", height=ph, width=pw)
 
 

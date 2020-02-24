@@ -24,7 +24,7 @@ library(tidyverse)
 ##### Generate Full range of VPD data #####
 
 #all
-VPD <-  seq(.5,1.5,length=100)#could use by= instead of length= to specify increment
+VPD <-  seq(.5,1.75,length=100)#could use by= instead of length= to specify increment
 
 ##### Generate Full range of gs data #####
 #treetop
@@ -449,7 +449,7 @@ MakeLetter <- function(a, where="left", cex=4)
 
 
 
-MakeLetter2 <- function(a, where="top", cex=5)
+MakeLetter2 <- function(a, where="top", cex=3)
   legend(where, pt.cex=0, bty="n", title=a, cex=cex, legend=NA)
 
 MakeLetter3 <- function(a, where="topright", cex=1)
