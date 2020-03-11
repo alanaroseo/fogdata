@@ -41,13 +41,15 @@ gs_b <-  seq(.01,.15,length=length(VPD))
 ####### calculate seconds of transpiration sustained
 
 #treetop
-V_released_t=0.06 #constant representing mean volume released during TT collapse (mol*m^-2):
+V_released_t=0.06 #constant representing mean molar quantity released during TT collapse (mol*m^-2):
 #midcrown
 V_released_m=0.27 
 #bottom
 V_released_b=0.19
 
-#very highest 5 sampes: 0.06, all above 100:0.13, 70-82m: 0.27, lowest 6 samples (to catch bottom of crown for all trees):0.19.
+#height trend based: very highest 5 sampes: 0.06,  70-82m: 0.27, lowest 6 samples (to catch bottom of crown for all trees):0.19.
+#min released (23%) based: very highest 5 sampes: 0.227, 70-82m: 0.18, lowest 6 samples (to catch bottom of crown for all trees):0.076.
+#max released (75%) based: very highest 5 sampes: 0.739, 70-82m: 0.59, lowest 6 samples (to catch bottom of crown for all trees):0.247.
 
 #####
 ######Make a function and calculate a z matrix
