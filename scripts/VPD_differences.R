@@ -16,18 +16,18 @@ library(ggsci)
 squish$height <- as.factor(squish$height)
 
 S <- ggplot(data = squish, aes(x = condition, y = Transfusion.Tissue.Area..mm2.)) + #####use this one squish#####
-geom_point(aes(color=condition, shape = height) ,  stroke = 8,alpha = .75,show.legend = FALSE, size =15) +
+  geom_point(aes(fill=condition, shape = height) ,  stroke = 1,alpha = .75,show.legend = FALSE, size =10, color ="white") +
   labs(y = "",
        x = "") +
   scale_fill_manual(values = c( "yellow3","seagreen4", "midnightblue"))+
-  scale_color_manual(values = c( "yellow3","seagreen4", "midnightblue"))+
-  scale_shape_manual(values = c(0:2,5))+
+  scale_shape_manual(values = c(21:24))+
   theme_classic( base_size = 30)
 
-  
 S <- S + xlim("Hydrated","Droughted","Fog exposed")
 
 S <- S + ylim(0,0.015)
+
+
 
 S+theme(axis.text.y = element_text(color="black"),
         axis.text.x = element_text(color="black"),
@@ -52,10 +52,10 @@ S+theme(axis.text.y = element_text(color="black"),
 #############
 
 V <- ggplot(data = Vdiff, aes(x = Height, y = max.VPD.diff)) + #####use this one VPD#####
-geom_jitter(aes( color =Height), alpha = .7,show.legend = FALSE, size = 10, shape = 17)+
+geom_jitter(aes( fill =Height), alpha = .7,show.legend = FALSE, size = 8, color ="darkgreen", shape = 24, stroke=2)+
   labs(y = "",
        x = "") +
-  scale_color_gradient(Vdiff, low =  "greenyellow", high = "darkgreen")+
+  scale_fill_gradient(Vdiff, low =  "greenyellow", high = "darkgreen")+
   theme_classic(base_size = 30)+
   coord_flip()
 
@@ -77,10 +77,10 @@ ggsave("VPDplot.tiff", height=ph, width=pw)
 
   
 G <- ggplot(data = Gs, aes(x = height, y = max.gs)) + #####use this one gs#####
-geom_jitter(aes( color =height), alpha = .7,show.legend = FALSE, size = 10, shape = 17)+
+geom_jitter(aes( fill =height), alpha = .7,show.legend = FALSE, size = 8, color ="darkgreen", shape = 24, stroke=2)+
   labs(y = "",
        x = "") +
-  scale_color_gradient(Vdiff, low =  "greenyellow", high = "darkgreen")+
+  scale_fill_gradient(Vdiff, low =  "greenyellow", high = "darkgreen")+
   theme_classic(base_size = 30)+
   coord_flip()
 
