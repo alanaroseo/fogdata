@@ -4,7 +4,8 @@ names(TT)
 tt <-  as.data.frame(read.delim("clipboard"))
 names(tt)
 
-
+sec <- as.data.frame(read.delim("clipboard"))
+names(sec)
 
 #
 p <- ggplot(data = TT, aes(x = height, y = seconds))+
@@ -48,6 +49,32 @@ ph = 8
 pw = 7
 ggsave("TTplot.tiff", height=ph, width=pw)
 
+
+#####
+
+S<- ggplot(data = sec, aes(x = height, y = seconds))+
+  geom_point(aes(fill=senario, shape = position), alpha=.5, size=6, shape =21, color="purple4", show.legend = FALSE)+
+  stat_smooth(method="loess", se=F, aes(color=senario),size = 1.5, show.legend = FALSE)+
+  scale_fill_manual(values = c("darkgreen","midnightblue", "chartreuse2"))+
+  scale_color_manual(values = c("darkgreen","midnightblue", "chartreuse2"))+
+  theme_classic( base_size = 30 )+
+  coord_flip()
+
+
+
+S+theme(axis.text.y = element_text(color="black"),
+        axis.text.x = element_text(color="black"),
+        axis.line.y = element_line(color="black",size = 1.52),
+        axis.line.x = element_line(color="black",size = 1.52),
+        axis.ticks.y = element_line(color="black", size =1),
+        axis.ticks.x = element_line(color="black", size =1))
+
+
+ph = 14
+pw = 8
+ggsave("sec.tiff", height=ph, width=pw)
+
+########
 
 colors()
 require(MASS)
