@@ -53,8 +53,8 @@ ggsave("TTplot.tiff", height=ph, width=pw)
 #####
 
 S<- ggplot(data = sec, aes(x = height, y = seconds))+
-  geom_point(aes(fill=senario, shape = position), alpha=.5, size=6, shape =21, color="purple4", show.legend = FALSE)+
-  stat_smooth(method="loess", se=F, aes(color=senario),size = 1.5, show.legend = FALSE)+
+  geom_point(aes(fill=senario, shape = position), alpha=.75, size=7, shape =21, color="purple4", show.legend = FALSE)+
+  stat_smooth(method="loess", se=F, aes(color=senario),size = 1.75, show.legend = FALSE)+
   scale_fill_manual(values = c("darkgreen","midnightblue", "chartreuse2"))+
   scale_color_manual(values = c("darkgreen","midnightblue", "chartreuse2"))+
   theme_classic( base_size = 30 )+

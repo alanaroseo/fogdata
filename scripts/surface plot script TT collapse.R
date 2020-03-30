@@ -39,7 +39,7 @@ gs_b <-  seq(.01,.15,length=length(VPD))
 
 
 ####### calculate seconds of transpiration sustained
-
+#height based:
 #treetop
 V_released_t=0.06 #constant representing mean molar quantity released during TT collapse (mol*m^-2):
 #midcrown
@@ -47,36 +47,100 @@ V_released_m=0.27
 #bottom
 V_released_b=0.19
 
-#height trend based: very highest 5 sampes: 0.06,  70-82m: 0.27, lowest 6 samples (to catch bottom of crown for all trees):0.19.
-#min released (23%) based: very highest 5 sampes: 0.227, 70-82m: 0.18, lowest 6 samples (to catch bottom of crown for all trees):0.076.
-#max released (75%) based: very highest 5 sampes: 0.739, 70-82m: 0.59, lowest 6 samples (to catch bottom of crown for all trees):0.247.
+#minimum collapse throughout:
+#treetop
+V_released_t_min=0.227 
+#midcrown
+V_released_m_min=0.18 
+#bottom
+V_released_b_min=0.076
+
+#maximum collapse throughout:
+#treetop
+V_released_t_max=0.739 
+#midcrown
+V_released_m_max=0.59 
+#bottom
+V_released_b_max=0.247
+
+#height trend based: very highest 5 samples: 0.06,  70-82m: 0.27, lowest 6 samples (to catch bottom of crown for all trees):0.19.
+#min released (23%) based: very highest 5 samples: 0.227, 70-82m: 0.18, lowest 6 samples (to catch bottom of crown for all trees):0.076.
+#max released (75%) based: very highest 5 samples: 0.739, 70-82m: 0.59, lowest 6 samples (to catch bottom of crown for all trees):0.247.
 
 #####
 ######Make a function and calculate a z matrix
-
+#height based
 #treetop
 E_t <- function(gs_t, VPD){
   V_released_t/(gs_t*(VPD/99.6))#transpiration (mol*m^-2*second^-1)
-}#the function "grid" is calculates the # of seconds of transpiration suatainable 
-seconds_t <- outer(gs_t,VPD,E_t)#outer() function applies the function "grid" at every combination of gs and VPD. Seconds is the z axis (a matrix)
+}    #the function "E_t" calculates the # of seconds of transpiration sustained given "V_released_t" the vollume of water released by cell collapse.
+seconds_t <- outer(gs_t,VPD,E_t)#outer() function applies the function "E_t" at every combination of gs and VPD. Seconds is the z axis (a matrix)
 rownames(seconds_t) = gs_t
 colnames(seconds_t) = VPD
-
 #midcrown
 E_m <- function(gs_m, VPD){
-  V_released_m/(gs_m*(VPD/99.6))#transpiration (mol*m^-2*second^-1)
-}#the function "grid" is calculates the # of seconds of transpiration suatainable 
-seconds_m <- outer(gs_m,VPD,E_m)#outer() function applies the function "grid" at every combination of gs and VPD. Seconds is the z axis (a matrix)
+  V_released_m/(gs_m*(VPD/99.6))
+  }
+seconds_m <- outer(gs_m,VPD,E_m)
 rownames(seconds_m) = gs_m
 colnames(seconds_m) = VPD
-
-#treetop
+#bottom
 E_b <- function(gs_b, VPD){
-  V_released_b/(gs_b*(VPD/99.6))#transpiration (mol*m^-2*second^-1)
-}#the function "grid" is calculates the # of seconds of transpiration suatainable 
-seconds_b <- outer(gs_b,VPD,E_b)#outer() function applies the function "grid" at every combination of gs and VPD. Seconds is the z axis (a matrix)
+  V_released_b/(gs_b*(VPD/99.6))
+  }
+seconds_b <- outer(gs_b,VPD,E_b)
 rownames(seconds_b) = gs_b
 colnames(seconds_b) = VPD
+
+#######
+#minimum collapse:
+#treetop
+E_t_min <- function(gs_t, VPD){
+  V_released_t_min/(gs_t*(VPD/99.6))#transpiration (mol*m^-2*second^-1)
+} #the function "E_t" calculates the # of seconds of transpiration suatainable 
+seconds_t_min <- outer(gs_t,VPD,E_t_min)#outer() function applies the function "E_t" at every combination of gs and VPD. Seconds is the z axis (a matrix)
+rownames(seconds_t_min) = gs_t
+colnames(seconds_t_min) = VPD
+
+#midcrown
+E_m_min <- function(gs_m, VPD){
+  V_released_m_min/(gs_m*(VPD/99.6))
+}
+seconds_m_min <- outer(gs_m,VPD,E_m_min)
+rownames(seconds_m_min) = gs_m
+colnames(seconds_m_min) = VPD
+#bottom
+E_b_min <- function(gs_b, VPD){
+  V_released_b_min/(gs_b*(VPD/99.6))
+}
+seconds_b_min <- outer(gs_b,VPD,E_b_min)
+rownames(seconds_b_min) = gs_b
+colnames(seconds_b_min) = VPD
+
+######
+#maximum collapse:
+#treetop
+E_t_max <- function(gs_t, VPD){
+  V_released_t_max/(gs_t*(VPD/99.6))#transpiration (mol*m^-2*second^-1)
+}#the function "E_t" calculates the # of seconds of transpiration suatainable 
+seconds_t_max <- outer(gs_t,VPD,E_t_max)#outer() function applies the function "E_t" at every combination of gs and VPD. Seconds is the z axis (a matrix)
+rownames(seconds_t_max) = gs_t
+colnames(seconds_t_max) = VPD
+#midcrown
+E_m_max <- function(gs_m, VPD){
+  V_released_m_max/(gs_m*(VPD/99.6))
+}
+seconds_m_max <- outer(gs_m,VPD,E_m_max)
+rownames(seconds_m_max) = gs_m
+colnames(seconds_m_max) = VPD
+#bottom
+E_b_max <- function(gs_b, VPD){
+  V_released_b_max/(gs_b*(VPD/99.6))
+}
+seconds_b_max <- outer(gs_b,VPD,E_b_max)
+rownames(seconds_b_max) = gs_b
+colnames(seconds_b_max) = VPD
+
 
 ######
 #the 3D plots
