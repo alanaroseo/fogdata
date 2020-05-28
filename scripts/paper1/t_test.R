@@ -4,11 +4,11 @@ squ.fog <- as.data.frame(read.delim("clipboard"))
 names(squ.hyd)
 
 
-t.test(squ.hyd$TT_Area, squ.dry$TT_Area, paired = TRUE, alternative = "two.sided")
+t.test(squ.hyd$Transfusion.Tissue.Area..mm2., squ.dry$Transfusion.Tissue.Area..mm2., paired = TRUE, alternative = "two.sided")
 
-t.test(squ.fog$TT_Area, squ.dry$TT_Area, paired = TRUE, alternative = "two.sided")
+t.test(squ.fog$Transfusion.Tissue.Area..mm2., squ.dry$Transfusion.Tissue.Area..mm2., paired = TRUE, alternative = "two.sided")
 
-t.test(squ.hyd$TT_Area, squ.fog$TT_Area, paired = TRUE, alternative = "two.sided")
+t.test(squ.hyd$Transfusion.Tissue.Area..mm2., squ.fog$Transfusion.Tissue.Area..mm2., paired = TRUE, alternative = "two.sided")
 
 
 names(less80)
@@ -23,7 +23,7 @@ var(less80$max.VPD.diff)
 mean(more80$seconds)
 mean(less80$seconds)
 
-var.test(more80$seconds,less80$seconds)#F test
+var.test(more80$max.VPD.diff,less80$max.VPD.diff)#F test
 
 bin<- as.data.frame(read.delim("clipboard"))
 mean(bin$seconds)

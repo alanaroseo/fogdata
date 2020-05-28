@@ -4,8 +4,8 @@ names(Vdiff)
 Gs <-  as.data.frame(read.delim("clipboard"))
 names(Gs)
 
-dots <-  as.data.frame(read.delim("clipboard"))
-names(dots)
+TT <-  as.data.frame(read.delim("clipboard"))
+names(TT)
 
 squish <-  as.data.frame(read.delim("clipboard"))
 names(squish)
@@ -105,21 +105,20 @@ ggplot(data = Vdiff, aes(x = position, y = max.VPD.diff)) +
   facet_wrap(~Site)
 ############ 
 
-l <- ggplot(data = light, aes(x = height, y = DSF)) + #####use this one VPD#####
+Tcap <- ggplot(data = TT, aes(x = height, y = TTv_per_m2/1000)) + #####use this one VPD#####
 geom_point(aes( fill =height), alpha = .7,show.legend = FALSE, size = 6, color ="darkgreen", shape = 21, stroke=2)+
-  stat_smooth(method="lm", se=F, color = "darkgreen",size = 1.5,show.legend = FALSE)+
   labs(y = "",
        x = "") +
   xlim(40,110)+
-  ylim(0,100)+
-  scale_fill_gradient(Vdiff, low =  "greenyellow", high = "darkgreen")+
+  ylim(0,35)+
+  scale_fill_gradient(TT, low =  "greenyellow", high = "darkgreen")+
   theme_classic(base_size = 30)+
   coord_flip()
 
 
 
 
-l+theme(axis.text.y = element_text(color="black"),
+Tcap+theme(axis.text.y = element_text(color="black"),
         axis.text.x = element_text(color="black"),
         axis.line.y = element_line(color="black",size = 1.52),
         axis.line.x = element_line(color="black",size = 1.52),
@@ -128,4 +127,4 @@ l+theme(axis.text.y = element_text(color="black"),
 
 ph = 5
 pw = 4.5
-ggsave("lightplot.tiff", height=ph, width=pw)
+ggsave("TTcapacity.tiff", height=ph, width=pw)

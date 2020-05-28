@@ -51,7 +51,6 @@ expfit_T11_L_30 <- nls(weight_perA ~ I(k*exp(-b1*Minutes) + b0), data= T11_L_30,
 
 summary(expfit_T11_L_30)
 
-
 #roughly check fit using Efron's pseudo R2
 pred <- predict(expfit_T11_L_30)
 n <- length(pred)
@@ -179,7 +178,7 @@ manipulate(
   },
   kk=slider(-1, 1, step = 0.001,  initial = 0.03),
   b10=slider(-1, 1, step = 0.001, initial = -.03),
-  b00=slider(-1, 1, step=0.001,initial= 0))
+  b00=slider(-1, 10, step=0.001,initial= 0))
 
 # When the slider box closes start_data() becomes a list of named parameters for use as start values
 
@@ -261,7 +260,7 @@ manipulate(
 start_T16_L_37
 
 # Model fit using the start values:
-expfit_T16_L_37 <- nls(weight_perA ~ I(k*exp(-b1*Minutes) + b0), data= T16_L_37, start = start_T16_L_37, control = list(maxiter = 1000, minFactor = .0000009))
+expfit_T16_L_37 <- nls(weight_perA ~ I(k*exp(-b1*Minutes) + b0), data= T16_L_37, start = start_T16_L_37, control = list(maxiter = 5000, minFactor = .000000009))
 
 summary(expfit_T16_L_37)
 
@@ -330,7 +329,7 @@ manipulate(
 start_T16_L_51
 
 # Model fit using the start values:
-expfit_T16_L_51 <- nls(weight_perA ~ I(k*exp(-b1*Minutes) + b0), data= T16_L_51, start = start_T16_L_51, control = list(maxiter = 1000, minFactor = .0000009))
+expfit_T16_L_51 <- nls(weight_perA ~ I(k*exp(-b1*Minutes) + b0), data= T16_L_51, start = start_T16_L_51, control = list(maxiter = 1000, minFactor = .000000009))
 
 summary(expfit_T16_L_51)
 
@@ -532,7 +531,7 @@ manipulate(
   },
   kk=slider(-1, 1, step = 0.001,  initial = 0.03),
   b10=slider(-1, 1, step = 0.001, initial = -.03),
-  b00=slider(-1, 1, step=0.001,initial= 0))
+  b00=slider(-1, 10, step=0.001,initial= 0))
 
 # When the slider box closes start_data() becomes a list of named parameters for use as start values
 
@@ -614,7 +613,7 @@ manipulate(
 start_T8_L_50
 
 # Model fit using the start values:
-expfit_T8_L_50 <- nls(weight_perA ~ I(k*exp(-b1*Minutes) + b0), data= T8_L_50, start = start_T8_L_50, control = list(maxiter = 1000, minFactor = .0000009))
+expfit_T8_L_50 <- nls(weight_perA ~ I(k*exp(-b1*Minutes) + b0), data= T8_L_50, start = start_T8_L_50, control = list(maxiter = 10000, minFactor = .00000000009))
 
 summary(expfit_T8_L_50)
 
@@ -678,7 +677,7 @@ manipulate(
   },
   kk=slider(-1, 1, step = 0.001,  initial = 0.03),
   b10=slider(-1, 1, step = 0.001, initial = -.03),
-  b00=slider(-1, 1, step=0.001,initial= 0))
+  b00=slider(-1, 10, step=0.001,initial= 0))
 
 # When the slider box closes start_data() becomes a list of named parameters for use as start values
 
@@ -757,7 +756,7 @@ manipulate(
 start_T8_L_97
 
 # Model fit using the start values:
-expfit_T8_L_97 <- nls(weight_perA ~ I(k*exp(-b1*Minutes) + b0), data= T8_L_97, start = start_T8_L_97, control = list(maxiter = 1000, minFactor = .0000009))
+expfit_T8_L_97 <- nls(weight_perA ~ I(k*exp(-b1*Minutes) + b0), data= T8_L_97, start = start_T8_L_97, control = list(maxiter = 10000, minFactor = .0000009))
 
 summary(expfit_T8_L_97)
 
@@ -832,8 +831,9 @@ manipulate(
 #print start values:
 start_T34_L_56
 
-# Model fit using the start values:
-expfit_T34_L_56 <- nls(weight_perA ~ I(k*exp(-b1*Minutes) + b0), data= T34_L_56, start = start_T34_L_56, control = list(maxiter = 1000, minFactor = .0000009))
+# Model fit using the start
+
+expfit_T34_L_56 <- nls(weight_perA ~ I(k*exp(-b1*Minutes) + b0), data= T34_L_56, start = start_T34_L_56, control = list(maxiter = 10000, minFactor = .000000009))
 
 summary(expfit_T34_L_56)
 
@@ -1036,7 +1036,7 @@ manipulate(
   },
   kk=slider(-1, 1, step = 0.001,  initial = 0.03),
   b10=slider(-1, 1, step = 0.001, initial = -.03),
-  b00=slider(-1, 1, step=0.001,initial= 0))
+  b00=slider(-1, 10, step=0.001,initial= 0))
 
 # When the slider box closes start_data() becomes a list of named parameters for use as start values
 
@@ -1122,7 +1122,7 @@ manipulate(
 start_T48_L_60
 
 # Model fit using the start values:
-expfit_T48_L_60 <- nls(weight_perA ~ I(k*exp(-b1*Minutes) + b0), data= T48_L_60, start = start_T48_L_60, control = list(maxiter = 1000, minFactor = .0000009))
+expfit_T48_L_60 <- nls(weight_perA ~ I(k*exp(-b1*Minutes) + b0), data= T48_L_60, start = start_T48_L_60, control = list(maxiter = 10000, minFactor = .00000009))
 
 summary(expfit_T48_L_60)
 

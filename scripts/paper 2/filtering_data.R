@@ -1,5 +1,6 @@
 #loading data
 fog <- as.data.frame(read.delim("clipboard"))
+L_all <- as.data.frame(read.delim("clipboard"))
 #filtering the data into subsets
 
 library(tidyverse)
@@ -68,3 +69,5 @@ T34_G_102 <- filter(T34_G, height == "102.3" )
 #
 T48_L_60 <- filter(T48_L, height == "60.9" )
 
+#####
+names(T48_L_60)
