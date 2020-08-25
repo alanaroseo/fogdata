@@ -1,6 +1,10 @@
 #loading data
 fog <- as.data.frame(read.delim("clipboard"))
 L_all <- as.data.frame(read.delim("clipboard"))
+G_all <- as.data.frame(read.delim("clipboard"))
+names(G_all)
+
+names(L_all)
 #filtering the data into subsets
 
 library(tidyverse)
@@ -35,11 +39,15 @@ T6_G_91 <- filter(T6_G, height == "91" )
 #
 T8_L_50 <- filter(T8_L, height == "50.5" )
 T8_L_66 <- filter(T8_L, height == "66.1" )
+T8_L_80 <- filter(T8_L, height == "80.5" )
 T8_L_97 <- filter(T8_L, height == "97" )
 
 T8_G_50 <- filter(T8_G, height == "50.5" )
 T8_G_66 <- filter(T8_G, height == "66.1" )
+T8_G_80 <- filter(T8_G, height == "80.5" )
 T8_G_97 <- filter(T8_G, height == "97" )
+
+
 #
 T11_L_30 <- filter(T11_L, height == "30" )
 T11_L_50 <- filter(T11_L, height == "50.5" )
